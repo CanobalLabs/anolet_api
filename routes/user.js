@@ -87,7 +87,7 @@ router.route("/reset-password").post(async (req, res) => {
                 },
                 subject: 'Anolet Password Reset',
                 text: "A password reset has been requested for the Anolet account linked to this email.",
-                html: `<a>A password reset has been requested for the Anolet account linked to this email.</a><br><br><b>Please click <a href="https://localhost/user/change-password/${jwt.sign({ id: res.locals.id }, process.env.HASH, { expiresIn: "1h" })}">here</a> to reset your password. This link will expire in 1 hour.</b><br><br><small>If you didn't request this email, you can ignore it. This email is not monitored, and responses will not be received.</small>`,
+                html: `<a>A password reset has been requested for the Anolet account linked to this email.</a><br><br><b>Please click <a href="${endpoints['password-reset']}${jwt.sign({ id: res.locals.id, "type": "password_reset" }, process.env.HASH, { expiresIn: "1h" })}">here</a> to reset your password. This link will expire in 1 hour.</b><br><br><small>If you didn't request this email, you can ignore it. This email is not monitored, and responses will not be received.</small>`,
             }).then(() => {
                 res.send("Email sent");
             }).catch((error) => {
@@ -105,6 +105,7 @@ router.route("/change-password").post(async (req, res) => {
     if (req.body?.password === undefined || req.body.password.length < 8) return res.status(400).send("Password is invalid");
     jwt.verify(req.body.token, process.env.HASH, (err, decoded) => {
         if (err) return res.status(400).send("Token is invalid");
+        if (decoded.type != "password_reset") return res.status(400).send("Token is invalid");
         bcrypt.hash(req.body.password, 10, function (err, hash) {
             if (err) return res.send(err);
             User.findOneAndUpdate(
@@ -119,7 +120,6 @@ router.route("/change-password").post(async (req, res) => {
             }).catch(err => res.send(err));
         });
     });
-
 });
 
 router.route("/verify/:jwt").get(async (req, res) => {
