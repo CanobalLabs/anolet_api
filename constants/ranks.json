@@ -1,0 +1,40 @@
+[
+    {
+        "id": "TRUSTED",
+        "permissions": [
+            "PRIORITIZED_REPORTS"
+        ]
+    },
+    {
+        "id": "UGC",
+        "permissions": [
+            "SHOP_UPLOAD"
+        ]
+    },
+    {
+        "id": "BETA_TESTER",
+        "permissions": [
+            "CANARY"
+        ]
+    },
+    {
+        "id": "FOUNDER",
+        "permissions": [
+            "IMPERSONATE_USER",
+            "EDIT_USER",
+            "RESET_USER",
+            "EDIT_OTHERS_ITEMS",
+            "UPDATE_BOARD",
+            "MODIFY_BANNER",
+            "MANAGE_BOARD",
+            "EDIT_OTHERS_GAMES",
+            "MODERATE_USER",
+            "MODERATE_GAME",
+            "EDIT_FEATURED_GAMES",
+            "EDIT_FEATURED_ITEMS",
+            "EDIT_USER_RANKS",
+            "CANARY",
+            "SHOP_UPLOAD"
+        ]
+    }
+]

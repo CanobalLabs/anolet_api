@@ -1,0 +1,45 @@
+{
+  "name": "com.anolet.platform",
+  "version": "1.0.0",
+  "description": "Phexora Platform (Web + API)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "engines": {
+    "node": "17.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anolet/platform.git"
+  },
+  "author": "Léo Badeaux",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anolet/platform/issues"
+  },
+  "homepage": "https://github.com/anolet/platform#readme",
+  "dependencies": {
+    "@sendgrid/mail": "^7.6.2",
+    "@sentry/node": "^6.17.2",
+    "@sentry/tracing": "^6.17.2",
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.5",
+    "cryptr": "^6.0.2",
+    "discord-oauth2": "^2.8.0",
+    "discord.js": "^13.3.1",
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-validation": "^3.0.8",
+    "https": "^1.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.12",
+    "nodemon": "^2.0.15",
+    "redis": "^4.0.0-rc.4",
+    "unorm": "^1.6.0",
+    "uuid": "^8.3.2",
+    "webhook-discord": "^3.7.8"
+  }
+}
