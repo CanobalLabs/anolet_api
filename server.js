@@ -17,6 +17,7 @@ app.get('/usr/:id', (req, res) => {
 // Import Routes
 const UserRoute = require("./routes/user.js");
 const LoginRoute = require("./routes/login.js");
+const e = require("express");
 
 // Use Routes
 app.use("/login", LoginRoute);
@@ -30,7 +31,6 @@ app.use(function (err, req, res, next) {
 });
 
 // Start Server
-https.createServer({
-  key: fs.readFileSync('./certificates/key.pem'),
-  cert: fs.readFileSync('./certificates/cert.pem')
-}, app).listen(443);
+app.listen(process.env.PORT || 80, () => {
+  console.log("Server Started");
+});
