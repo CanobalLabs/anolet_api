@@ -10,8 +10,9 @@ const fs = require("fs");
 const bcrypt = require('bcrypt');
 
 const endpoints = {
-    "email-verify": "https://api.anolet.com/user/verify/",
-    "password-reset": "https://api.anolet.com/user/reset-password/",
+    "site": "https://alpha.anolet.com",
+    "email-verify": (process.env.ENVIRONMENT == "dev") ? "http://localhost/user/verify/" : "https://api.anolet.com/user/verify/",
+    "password-reset": (process.env.ENVIRONMENT == "dev") ? "http://localhost/user/verify/" : "https://api.anolet.com/user/verify/",
 }
 router.route("/me").get((req, res) => {
     if (!res.locals.id) return res.send("Unauthorized");
@@ -70,6 +71,7 @@ router.route("/email").post(async (req, res) => {
     }).catch(err => res.send(err))
 });
 
+// unlike e,
 router.route("/reset-password").post(async (req, res) => {
     if (!res.locals.id) return req.status(401).send("Unauthorized");
     // make this prettier soon
@@ -136,7 +138,7 @@ router.route("/verify/:jwt").get(async (req, res) => {
                     emailVerified: true
                 }, { new: true }
             ).then(response => {
-                res.send("Email verified");
+                res.send(`<h1>Email Verified</h1><br><a href="${endpoints.site}">Return to website</a>`);
             });
         });
     });
