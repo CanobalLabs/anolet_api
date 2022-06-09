@@ -3,6 +3,7 @@ const { ValidationError } = require('express-validation')
 const app = express();
 const fs = require("fs");
 const https = require("https");
+var cors = require('cors');
 require("./modules/Mongoose");
 app.use(express.json());
 
@@ -19,9 +20,22 @@ const UserRoute = require("./routes/user.js");
 const LoginRoute = require("./routes/login.js");
 const e = require("express");
 
+var whitelist = ['https://alpha.anolet.com', 'https://anolet.com', 'http://localhost', "https://localhost", "https://localhost:3000", "http://localhost:3000"]
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+
+app.use(cors(corsOptions));
 // Use Routes
 app.use("/login", LoginRoute);
 app.use("/user", UserRoute);
+app.u
 
 // Error Handler
 app.use(function (err, req, res, next) {
