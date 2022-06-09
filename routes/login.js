@@ -23,7 +23,7 @@ router.post("/signup", validate(validation, {}, {}), async (req, res) => {
 });
 
 router.post("/", validate(validation, {}, {}), async (req, res) => {
-    User.findOne({ username: { '$regex': "^" + req.body.username + "$", $options: 'i' } }).then(response => {
+    User.findOne({ username: { $regex : new RegExp(req.body.username, "i") } }).then(response => {
         if (response == null) return res.status(400).json({
             token: null,
             error: "An account with that username does not exist."
