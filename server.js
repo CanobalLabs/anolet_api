@@ -35,7 +35,6 @@ app.use(cors(corsOptions));
 // Use Routes
 app.use("/login", LoginRoute);
 app.use("/user", UserRoute);
-app.u
 
 // Error Handler
 app.use(function (err, req, res, next) {
