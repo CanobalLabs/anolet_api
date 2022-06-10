@@ -20,7 +20,7 @@ const UserRoute = require("./routes/user.js");
 const LoginRoute = require("./routes/login.js");
 const e = require("express");
 
-var whitelist = ['https://alpha.anolet.com', 'https://anolet.com', 'http://localhost', "https://localhost", "https://localhost:3000", "http://localhost:3000"]
+var whitelist = ['https://alpha.anolet.com', 'https://anolet.com', 'http://localhost', "https://localhost", "https://localhost:3000", "http://localhost:3000", "https://api.anolet.com"]
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
