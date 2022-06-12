@@ -28,7 +28,7 @@ var corsOptions = {
   }
 }
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 // Use Routes
 app.use("/login", LoginRoute);
 app.use("/user", UserRoute);
