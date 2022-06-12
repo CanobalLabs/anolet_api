@@ -1,9 +1,7 @@
 const express = require("express");
 const { ValidationError } = require('express-validation')
 const app = express();
-const fs = require("fs");
-const https = require("https");
-var cors = require('cors');
+const cors = require('cors');
 require("./modules/Mongoose");
 app.use(express.json());
 
@@ -18,7 +16,6 @@ app.get('/usr/:id', (req, res) => {
 // Import Routes
 const UserRoute = require("./routes/user.js");
 const LoginRoute = require("./routes/login.js");
-const e = require("express");
 
 var whitelist = ['https://alpha.anolet.com', 'https://anolet.com', 'http://localhost', "https://localhost", "https://localhost:3000", "http://localhost:3000", "https://api.anolet.com"]
 var corsOptions = {
@@ -31,7 +28,7 @@ var corsOptions = {
   }
 }
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 // Use Routes
 app.use("/login", LoginRoute);
 app.use("/user", UserRoute);
