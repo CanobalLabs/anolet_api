@@ -7,6 +7,11 @@ app.use(express.json());
 
 app.use("*", require("./modules/CheckAuth"));
 
+app.use(function(req, res, next) {
+  res.setHeader('access-control-allow-origin', '*')
+  next();
+});
+
 app.get('/usr/:id', (req, res) => {
   const cryptr = require("./modules/Cryptr.js")
   res.send(cryptr.encrypt(req.params.id));
@@ -17,18 +22,6 @@ app.get('/usr/:id', (req, res) => {
 const UserRoute = require("./routes/user.js");
 const LoginRoute = require("./routes/login.js");
 
-var whitelist = ['https://alpha.anolet.com', 'https://anolet.com', 'http://localhost', "https://localhost", "https://localhost:3000", "http://localhost:3000", "https://api.anolet.com"]
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
-
-// app.use(cors(corsOptions));
 // Use Routes
 app.use("/login", LoginRoute);
 app.use("/user", UserRoute);
