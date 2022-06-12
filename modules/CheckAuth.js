@@ -4,7 +4,7 @@ function checkauth(req, res, next) {
         res.locals.id = 0;
     } else {
         try {
-            var id = cryptr.decrypt(req.headers.authorization);
+            var id = cryptr.decrypt(req.headers.authorization.split("-")[1]);
             if (id) {
                 res.locals.id = id;
             }

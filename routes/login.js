@@ -18,7 +18,7 @@ router.post("/signup", validate(validation, {}, {}), async (req, res) => {
     let uid = uuidv4();
     bcrypt.hash(req.body.password, 10, function (err, hash) {
         new User({ id: uid, username: req.body.username, password: hash, about: "I don't have a bio, but I can change that!" }).save();
-        res.json({ token: cryptr.encrypt(uid), error: false });
+        res.json({ token: "YT/XK1ctsfM7FI-" + cryptr.encrypt(uid), error: false });
     });
 });
 
@@ -30,7 +30,7 @@ router.post("/", validate(validation, {}, {}), async (req, res) => {
         });
         bcrypt.compare(req.body.password, response.password, function (err, result) {
             if (result) {
-                res.json({ token: cryptr.encrypt(response.id), error: false });
+                res.json({ token: "YT/XK1ctsfM7FI-" + cryptr.encrypt(response.id), error: false });
             } else {
                 res.status(400).json({
                     token: null,

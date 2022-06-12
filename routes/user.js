@@ -20,10 +20,7 @@ router.route("/me").get((req, res) => {
         user.password = undefined;
         res.json(user);
     });
-});
-
-
-router.route("/edit").post(validate(validation, {}, {}), async (req, res) => {
+}).post(validate(validation, {}, {}), async (req, res) => {
     if (!res.locals.id) return req.status(401).send("Unauthorized");
     User.findOneAndUpdate(
         {
@@ -39,7 +36,7 @@ router.route("/edit").post(validate(validation, {}, {}), async (req, res) => {
     }).catch(err => res.send(err))
 });
 
-router.route("/email").post(async (req, res) => {
+router.route("/user/me/email").post(async (req, res) => {
     if (!res.locals.id) return req.status(401).send("Unauthorized");
     if (req.body?.email === undefined || req.body.email.length > 50) return res.status(400).send("Email is invalid");
     User.findOneAndUpdate(
@@ -72,7 +69,7 @@ router.route("/email").post(async (req, res) => {
 });
 
 // unlike e,
-router.route("/reset-password").post(async (req, res) => {
+router.route("/user/me/reset-password").post(async (req, res) => {
     if (!res.locals.id) return req.status(401).send("Unauthorized");
     // make this prettier soon
     User.findOne(
@@ -101,7 +98,7 @@ router.route("/reset-password").post(async (req, res) => {
     })
 });
 
-router.route("/change-password").post(async (req, res) => {
+router.route("/user/me/change-password").post(async (req, res) => {
     if (!res.locals.id) return req.status(401).send("Unauthorized");
     if (req.body?.token == undefined) return res.status(400).send("Token is invalid");
     if (req.body?.password === undefined || req.body.password.length < 8) return res.status(400).send("Password is invalid");

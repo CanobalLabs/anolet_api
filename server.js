@@ -1,11 +1,11 @@
 const express = require("express");
-const { ValidationError } = require('express-validation')
+const { ValidationError } = require('express-validation');
 const app = express();
 const cors = require('cors');
 require("./modules/Mongoose");
 app.use(express.json());
 
-app.use("*", require("./modules/CheckAuth"))
+app.use("*", require("./modules/CheckAuth"));
 
 app.get('/usr/:id', (req, res) => {
   const cryptr = require("./modules/Cryptr.js")
@@ -37,6 +37,8 @@ app.use("/user", UserRoute);
 app.use(function (err, req, res, next) {
   if (err instanceof ValidationError) {
     return res.status(err.statusCode).json(err)
+  } else {
+    next()
   }
 });
 
