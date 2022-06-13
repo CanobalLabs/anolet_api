@@ -14,6 +14,8 @@ app.use(function(req, res, next) {
   next();
 });
 
+console.log(process)
+
 app.get('/usr/:id', (req, res) => {
   const cryptr = require("./modules/Cryptr.js")
   res.send(cryptr.encrypt(req.params.id));
