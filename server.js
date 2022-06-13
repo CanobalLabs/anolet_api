@@ -10,7 +10,9 @@ app.use("*", require("./modules/CheckAuth"));
 
 app.use(function(req, res, next) {
   res.removeHeader("x-powered-by");
-  res.setHeader('access-control-allow-origin', '*')
+  res.setHeader('x-platform', process.platform)
+  res.setHeader('x-pid', process.pid)
+  res.setHeader('x-ppid', process.ppid)
   next();
 });
 
