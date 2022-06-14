@@ -70,6 +70,7 @@ const gameSchema = new Schema({
     zones: [{
         id: Number,
         nickname: String,
+        boundaryPolylines: [[Number]],
         layers: [{
             layer: Number,
             nickname: String,
