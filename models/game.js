@@ -70,6 +70,11 @@ const gameSchema = new Schema({
     zones: [{
         id: Number,
         nickname: String,
+        layers: [{
+            layer: Number,
+            nickname: String,
+            assetURL: String
+        }]
     }],
 });
 
