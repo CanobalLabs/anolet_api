@@ -70,9 +70,7 @@ const gameSchema = new Schema({
     zones: [{
         id: Number,
         nickname: String,
-        
     }],
-    defaultZone: 1
 });
 
 const Game = mongoose.model("Game", gameSchema);
