@@ -53,10 +53,6 @@ const gameSchema = new Schema({
     carouselImages: [{
         id: String,
     }],
-    allTimeVisits: {
-        type: Number,
-        required: true,
-    },
     playing: {
         type: Boolean,
         required: true,
