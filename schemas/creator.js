@@ -6,7 +6,7 @@ const creatorSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    slug: {
+    id: {
         type: String,
         required: true,
     },
