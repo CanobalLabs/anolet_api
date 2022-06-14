@@ -16,20 +16,15 @@ app.use(function(req, res, next) {
   next();
 });
 
-
-app.get('/usr/:id', (req, res) => {
-  const cryptr = require("./modules/Cryptr.js")
-  res.send(cryptr.encrypt(req.params.id));
-  // res.sendFile(__dirname + '/views/index.html');
-});
-
 // Import Routes
 const UserRoute = require("./routes/user.js");
 const LoginRoute = require("./routes/login.js");
+const GameRoute = require("./routes/game.js");
 
 // Use Routes
 app.use("/login", LoginRoute);
 app.use("/user", UserRoute);
+app.use("/game", GameRoute);
 
 // Error Handler
 app.use(function (err, req, res, next) {

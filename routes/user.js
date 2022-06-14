@@ -68,8 +68,7 @@ router.route("/user/me/email").post(async (req, res) => {
     }).catch(err => res.send(err))
 });
 
-// unlike e,
-router.route("/user/me/reset-password").post(async (req, res) => {
+router.route("/user/me/send-reset-email").post(async (req, res) => {
     if (!res.locals.id) return req.status(401).send("Unauthorized");
     // make this prettier soon
     User.findOne(

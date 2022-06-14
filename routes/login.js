@@ -7,6 +7,7 @@ const cryptr = require('../modules/Cryptr');
 const CheckUsername = require("../modules/CheckUsername.js");
 const { validate } = require('express-validation');
 const validation = require("../validation/user/auth.js");
+const GenerateToken = require("../modules/GenerateToken.js");
 
 router.post("/signup", validate(validation, {}, {}), async (req, res) => {
     if (await CheckUsername(req.body.username)) {
@@ -18,7 +19,7 @@ router.post("/signup", validate(validation, {}, {}), async (req, res) => {
     let uid = uuidv4();
     bcrypt.hash(req.body.password, 10, function (err, hash) {
         new User({ id: uid, username: req.body.username, password: hash, about: "I don't have a bio, but I can change that!" }).save();
-        res.json({ token: "YT/XK1ctsfM7FI-" + cryptr.encrypt(uid), error: false });
+        res.json({ token: GenerateToken(uid), error: false });
     });
 });
 
@@ -30,7 +31,7 @@ router.post("/", validate(validation, {}, {}), async (req, res) => {
         });
         bcrypt.compare(req.body.password, response.password, function (err, result) {
             if (result) {
-                res.json({ token: "YT/XK1ctsfM7FI-" + cryptr.encrypt(response.id), error: false });
+                res.json({ token: GenerateToken(response.id), error: false });
             } else {
                 res.status(400).json({
                     token: null,

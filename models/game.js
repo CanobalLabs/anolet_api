@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const gameSchema = new Schema({
     id: {
-        type: String,
+        type: Number,
         required: true,
     },
     title: {
@@ -74,7 +74,9 @@ const gameSchema = new Schema({
     zones: [{
         id: Number,
         nickname: String,
+        
     }],
+    defaultZone: 1
 });
 
 const Game = mongoose.model("Game", gameSchema);
