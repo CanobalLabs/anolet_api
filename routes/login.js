@@ -3,7 +3,6 @@ let router = express.Router();
 const User = require("../models/user.js");
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
-const cryptr = require('../modules/Cryptr');
 const CheckUsername = require("../modules/CheckUsername.js");
 const { validate } = require('express-validation');
 const validation = require("../validation/user/auth.js");
