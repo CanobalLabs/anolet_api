@@ -18,6 +18,10 @@ const userSchema = new Schema({
         type: String,
         required: false,
     },
+    amulets: {
+        type: Number,
+        required: true,
+    },
     about: {
         type: String,
         required: false,
