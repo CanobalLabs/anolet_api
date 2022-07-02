@@ -9,10 +9,10 @@ const validation = require("../validation/user/auth.js");
 const GenerateToken = require("../modules/GenerateToken.js");
 
 router.post("/signup", validate(validation, {}, {}), async (req, res) => {
-    if (await CheckUsername(req.body.username)) {
+    if (await CheckUsername(req.body.username) || /^[a-zA-Z0-9_.-]*$/.test(req.body.username) == false) {
         return res.status(400).json({
             token: null,
-            error: "Username already exists."
+            error: "Username already exists or is invalid."
         });
     }
     let uid = uuidv4();
