@@ -10,9 +10,9 @@ const fs = require("fs");
 const bcrypt = require('bcrypt');
 
 const endpoints = {
-    "site": "https://alpha.anolet.com",
-    "email-verify": (process.env.ENVIRONMENT == "dev") ? "http://localhost/user/verify/" : "https://api.anolet.com/user/verify/",
-    "password-reset": (process.env.ENVIRONMENT == "dev") ? "http://localhost/user/verify/" : "https://api.anolet.com/user/verify/",
+    "site": "https://staging.anolet.com",
+    "email-verify": (process.env.ENVIRONMENT == "dev") ? "http://localhost/user/verify/" : "https://staging-api-infra.anolet.com/user/verify/",
+    "password-reset": (process.env.ENVIRONMENT == "dev") ? "http://localhost/user/verify/" : "https://staging-api-infra.anolet.com/user/verify/",
 }
 router.route("/me").get((req, res) => {
     if (!res.locals.id) return res.send("Unauthorized");
@@ -22,6 +22,7 @@ router.route("/me").get((req, res) => {
     });
 }).post(validate(validation, {}, {}), async (req, res) => {
     if (!res.locals.id) return req.status(401).send("Unauthorized");
+if (req.body.username && /^[a-zA-Z0-9_.-]*$/.test(req.body.username) == false) return req.status(400).send("Bad UN")
     User.findOneAndUpdate(
         {
             "id": res.locals.id
