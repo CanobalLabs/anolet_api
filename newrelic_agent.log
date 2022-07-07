@@ -1,0 +1,12 @@
+{"v":0,"level":30,"name":"newrelic","hostname":"themainframe","pid":23804,"time":"2022-07-07T06:47:43.120Z","msg":"Using New Relic for Node.js. Agent version: 8.14.1; Node version: v17.1.0."}
+{"v":0,"level":40,"name":"newrelic","hostname":"themainframe","pid":23804,"time":"2022-07-07T06:47:43.127Z","msg":"New Relic for Node.js 8.14.1 has not been tested on Node.js v17.1.0. Please update the agent or downgrade your version of Node.js"}
+{"v":0,"level":30,"name":"newrelic","hostname":"themainframe","pid":23804,"time":"2022-07-07T06:47:43.471Z","msg":"Using LegacyContextManager"}
+{"v":0,"level":30,"name":"newrelic","hostname":"themainframe","pid":23804,"time":"2022-07-07T06:47:43.747Z","msg":"Agent state changed from stopped to starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"themainframe","pid":23804,"time":"2022-07-07T06:47:43.791Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"themainframe","pid":23804,"time":"2022-07-07T06:47:43.792Z","msg":"Agent state changed from starting to connecting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"themainframe","pid":23804,"time":"2022-07-07T06:47:48.446Z","msg":"Agent state changed from connecting to connected."}
+{"v":0,"level":30,"name":"newrelic","hostname":"themainframe","pid":23804,"time":"2022-07-07T06:47:48.447Z","msg":"Connected to collector-009.newrelic.com:443 with agent run ID BXTfpGH6F1ksADYKplRY1JhixoHcAAgBAAAnIQEAAFz8AgRUWN5rAwAGOC4xNC4xAAx0aGVtYWluZnJhbWUAA2FwaQ.","component":"collector_api"}
+{"v":0,"level":30,"name":"newrelic","hostname":"themainframe","pid":23804,"time":"2022-07-07T06:47:48.447Z","msg":"Reporting to: https://rpm.newrelic.com/accounts/3541670/applications/1415110251","component":"collector_api"}
+{"v":0,"level":30,"name":"newrelic","hostname":"themainframe","pid":23804,"time":"2022-07-07T06:47:48.451Z","msg":"Valid event_harvest_config received. Updating harvest cycles. {\"report_period_ms\":5000,\"harvest_limits\":{\"error_event_data\":8,\"log_event_data\":833,\"analytic_event_data\":833,\"custom_event_data\":83}}"}
+{"v":0,"level":30,"name":"newrelic","hostname":"themainframe","pid":23804,"time":"2022-07-07T06:47:48.463Z","msg":"Agent state changed from connected to started."}
+{"v":0,"level":30,"name":"newrelic","hostname":"themainframe","pid":23804,"time":"2022-07-07T06:47:49.476Z","msg":"Starting initial 1000ms harvest."}

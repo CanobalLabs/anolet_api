@@ -1,3 +1,4 @@
+require('newrelic');
 const express = require("express");
 const { ValidationError } = require('express-validation');
 const app = express();
