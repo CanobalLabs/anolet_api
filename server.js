@@ -36,6 +36,11 @@ app.use(function (err, req, res, next) {
   }
 });
 
+process.on('uncaughtException', function (err) {
+  console.error(err);
+  console.log("Node NOT Exiting...");
+});
+
 // Start Server
 app.listen(process.env.PORT || 80, () => {
   console.log("Server Started");
