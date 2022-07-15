@@ -1,5 +1,3 @@
 {
-    "files.associations": {
-        "*.ejs": "html"
-      }
+    "window.title": "Anolet Employee | Editing ${dirty}${rootName} ~ ${activeEditorShort}"
 }

@@ -57,6 +57,7 @@ const gameSchema = new Schema({
         type: Boolean,
         required: true,
     },
+    gdp: Number,
     totalHoursPlayed: {
         type: Number,
         required: true,
@@ -79,5 +80,6 @@ const gameSchema = new Schema({
     }],
 });
 
+gameSchema.index({title: 'text'});
 const Game = mongoose.model("Game", gameSchema);
 module.exports = Game;

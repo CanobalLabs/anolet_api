@@ -4,6 +4,7 @@ const Game = require("../models/game.js");
 
 router.route("/:gameId").get((req, res) => {
     Game.findOne({ "id": req.params.gameId }).then(game => {
+        delete game.gdp;
         res.json(game);
     });
 });

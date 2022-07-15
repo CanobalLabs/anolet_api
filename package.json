@@ -26,15 +26,26 @@
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
     "bcrypt": "^5.0.1",
+    "body-parser": "^1.20.0",
+    "canvas": "^2.9.3",
     "cors": "^2.8.5",
     "cryptr": "^6.0.3",
+    "data-uri-to-buffer": "^3.0.1",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "express-validation": "^4.1.0",
     "fs": "^0.0.1-security",
+    "get-pixels": "^3.3.3",
     "jsonwebtoken": "^8.5.1",
+    "merge-images": "^2.0.0",
+    "minio": "^7.0.28",
+    "mkdirp": "^1.0.4",
     "mongoose": "^6.3.6",
+    "multer": "^1.4.5-lts.1",
     "newrelic": "^8.14.1",
+    "path": "^0.12.7",
+    "save-pixels": "^2.3.6",
+    "trim-image": "^1.0.3",
     "uuid": "^8.3.2"
   }
 }

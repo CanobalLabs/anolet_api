@@ -6,6 +6,16 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    belongings: require("../schemas/belongings"),
+    avatar: require("../schemas/belongings"),
+    defaultRender: {
+        type: Boolean,
+        required: true
+    },
+    created: {
+        type: Date,
+        required: true
+    },
     username: {
         type: String,
         required: true,
@@ -14,10 +24,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    rank: {
-        type: String,
-        required: false,
-    },
+    ranks: [String],
     amulets: {
         type: Number,
         required: true,
@@ -36,5 +43,6 @@ const userSchema = new Schema({
     },
 });
 
+userSchema.index({username: 'text'});
 const User = mongoose.model("User", userSchema);
 module.exports = User;

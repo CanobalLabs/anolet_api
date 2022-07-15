@@ -1,4 +1,4 @@
-const cryptr = require ("./Cryptr.js")
+const cryptr = require("./Cryptr.js")
 function checkauth(req, res, next) {
     if (!req.headers.authorization) {
         res.locals.id = 0;

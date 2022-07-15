@@ -21,18 +21,21 @@ app.use(function(req, res, next) {
 const UserRoute = require("./routes/user.js");
 const LoginRoute = require("./routes/login.js");
 const GameRoute = require("./routes/game.js");
+const ItemRoute = require("./routes/item.js");
 
 // Use Routes
 app.use("/login", LoginRoute);
 app.use("/user", UserRoute);
 app.use("/game", GameRoute);
+app.use("/item", ItemRoute);
 
 // Error Handler
 app.use(function (err, req, res, next) {
   if (err instanceof ValidationError) {
     return res.status(err.statusCode).json(err)
   } else {
-    next()
+    console.error(err)
+    return res.status(500).send(err)
   }
 });
 

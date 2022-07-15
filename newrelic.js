@@ -1,4 +1,5 @@
 'use strict'
+// will need to make sure new relic doesn't run in dev environments soon
 /**
  * New Relic agent configuration.
  *

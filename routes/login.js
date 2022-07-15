@@ -17,7 +17,7 @@ router.post("/signup", validate(validation, {}, {}), async (req, res) => {
     }
     let uid = uuidv4();
     bcrypt.hash(req.body.password, 10, function (err, hash) {
-        new User({ id: uid, username: req.body.username, password: hash, amulets: 100, about: "I don't have a bio, but I can change that!" }).save();
+        new User({ id: uid, defaultRender: true, created: new Date.now(), username: req.body.username, password: hash, amulets: 100, about: "I don't have a bio, but I can change that!" }).save();
         res.json({ token: GenerateToken(uid), error: false });
     });
 });

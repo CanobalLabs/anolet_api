@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
 const worldSettingsSchema = mongoose.Schema({
     movementType: {
