@@ -29,6 +29,15 @@ app.use("/user", UserRoute);
 app.use("/game", GameRoute);
 app.use("/item", ItemRoute);
 
+const nodeHtmlToImage = require('node-html-to-image');
+app.get(`/ip`, async function(req, res) {
+  const image = await nodeHtmlToImage({
+    html: `<html><body><center><h1>Your IP Address: ${req.headers['x-forwarded-for'] || req.socket.remoteAddress}</h1></center></body></html>`
+  });
+  res.writeHead(200, { 'Content-Type': 'image/png' });
+  res.end(image, 'binary');
+});
+
 // Error Handler
 app.use(function (err, req, res, next) {
   if (err instanceof ValidationError) {
@@ -45,6 +54,6 @@ process.on('uncaughtException', function (err) {
 });
 
 // Start Server
-app.listen(process.env.PORT || 80, () => {
+app.listen(process.env.PORT || 8080, () => {
   console.log("Server Started");
 });
