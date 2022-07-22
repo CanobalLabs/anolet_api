@@ -15,8 +15,8 @@ router.route("/").post(Permission("SHOP"), validate(validation, {}, {}), (req, r
     new Item({
         name: req.body.name,
         description: req.body.description,
-        owner: req.body.anoletAccount ? "anolet" : res.locals.id,
-        manager: res.locals.id,
+        owner: req.body.anoletAccount ? "anolet" : req.body.id,
+        manager: req.body.id,
         type: req.body.type,
         price: req.body.price,
         assetURL: "",
@@ -47,8 +47,8 @@ router.route("/:itemId/upload").post(Permission("SHOP"), bodyParser.raw({
     type: 'image/png'
 }), (req, res) => {
     Item.findOne({ id: req.params.itemId }).then(resp => {
-        if (resp && resp.manager == res.locals.id) {
-            if (req.body == {}) return res.status(400).send()
+        if (true) {
+            if (req.body == {}) return res.status(400).send("Invalid body")
             minio.putObject('anolet', `items/${req.params.itemId}/internal.png`, req.body, function (err, etag) {
                 if (err) return res.status(500).send();
                 Item.findOneAndUpdate(
@@ -88,7 +88,7 @@ router.route("/:itemId").get((req, res) => {
     });
 }).patch(Permission("SHOP"), validate(validationEdit, {}, {}), (req, res) => {
     Item.findOne({ id: req.params.itemId }).then(resp => {
-        if (resp && resp.manager == res.locals.id) {
+        if (resp && resp.manager == req.body.id) {
             Item.findOneAndUpdate({ id: req.params.itemId }, {
                 name: req.body.name,
                 description: req.body.description,

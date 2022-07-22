@@ -2,6 +2,7 @@ const { Joi } = require('express-validation')
 
 module.exports = {
   body: Joi.object({
+    id: Joi.any(),
     name: Joi.string().min(1).max(255).required(),
     description: Joi.string().min(1).max(255).required(),
     type: Joi.string().valid('hat', 'face', 'body', 'shoes').required(),
