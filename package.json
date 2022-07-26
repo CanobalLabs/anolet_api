@@ -1,7 +1,7 @@
 {
   "name": "com.anolet.platform",
   "version": "1.0.0",
-  "description": "Phexora Platform (Web + API)",
+  "description": "Anolet API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/anolet/platform.git"
   },
-  "author": "Léo Badeaux",
+  "author": "Anolet LLC",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/anolet/platform/issues"
