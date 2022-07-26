@@ -3,11 +3,22 @@ const express = require("express");
 const { ValidationError } = require('express-validation');
 const app = express();
 const cors = require('cors');
+const { createClient } = require("redis");
 require("./modules/Mongoose");
 app.use(express.json());
 
 app.use(cors())
 app.use("*", require("./modules/CheckAuth"));
+
+const client = createClient({
+  url: process.env.REDIS_URL || process.env.REDIS_TLS_URL
+});
+
+client.on('error', function (err) {
+  console.error('Redis error:', err);
+});
+
+client.connect();
 
 app.use(function(req, res, next) {
   res.removeHeader("x-powered-by");
@@ -22,21 +33,14 @@ const UserRoute = require("./routes/user.js");
 const LoginRoute = require("./routes/login.js");
 const GameRoute = require("./routes/game.js");
 const ItemRoute = require("./routes/item.js");
+const ACCService = require("./routes/item.js")(client);
 
 // Use Routes
 app.use("/login", LoginRoute);
 app.use("/user", UserRoute);
 app.use("/game", GameRoute);
 app.use("/item", ItemRoute);
-
-const nodeHtmlToImage = require('node-html-to-image');
-app.get(`/ip`, async function(req, res) {
-  const image = await nodeHtmlToImage({
-    html: `<html><body><center><h1>Your IP Address: ${req.headers['x-forwarded-for'] || req.socket.remoteAddress}</h1></center></body></html>`
-  });
-  res.writeHead(200, { 'Content-Type': 'image/png' });
-  res.end(image, 'binary');
-});
+app.use("/ACCService", ACCService);
 
 // Error Handler
 app.use(function (err, req, res, next) {
