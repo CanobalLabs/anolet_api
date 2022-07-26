@@ -1,4 +1,8 @@
 require('newrelic');
+process.on('uncaughtException', function (err) {
+  console.error(err);
+  console.log("Node NOT Exiting...");
+});
 const express = require("express");
 const { ValidationError } = require('express-validation');
 const app = express();
@@ -33,7 +37,7 @@ const UserRoute = require("./routes/user.js");
 const LoginRoute = require("./routes/login.js");
 const GameRoute = require("./routes/game.js");
 const ItemRoute = require("./routes/item.js");
-const ACCService = require("./routes/item.js")(client);
+const ACCService = require("./routes/ACCService.js")(client);
 
 // Use Routes
 app.use("/login", LoginRoute);
@@ -50,11 +54,6 @@ app.use(function (err, req, res, next) {
     console.error(err)
     return res.status(500).send(err)
   }
-});
-
-process.on('uncaughtException', function (err) {
-  console.error(err);
-  console.log("Node NOT Exiting...");
 });
 
 // Start Server
