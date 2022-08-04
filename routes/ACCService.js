@@ -12,7 +12,6 @@ router.route("/:gameId/requestGameLaunchAuthorization").get((req, res) => {
         } else if (game.privacyLevel == 1) {
             // Only the creator can access, check
             if (res.locals.id == game.creator.id) {
-                client.set(`key:${game.id}:${res.locals.id}`, 0x0, { EXP: 60 });
                 res.send(jwt.sign({ game: req.params.gameId, user: res.locals.id }, process.env.HASH, { expiresIn: "30s" }));
             } else {
                 res.status(403).send("You do not own that game.")
