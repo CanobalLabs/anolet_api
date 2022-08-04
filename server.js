@@ -7,22 +7,12 @@ const express = require("express");
 const { ValidationError } = require('express-validation');
 const app = express();
 const cors = require('cors');
-const { createClient } = require("redis");
 require("./modules/Mongoose");
 app.use(express.json());
 
 app.use(cors())
 app.use("*", require("./modules/CheckAuth"));
 
-const client = createClient({
-  url: process.env.REDIS_URL || process.env.REDIS_TLS_URL
-});
-
-client.on('error', function (err) {
-  console.error('Redis error:', err);
-});
-
-client.connect();
 
 app.use(function(req, res, next) {
   res.removeHeader("x-powered-by");
@@ -37,7 +27,7 @@ const UserRoute = require("./routes/user.js");
 const LoginRoute = require("./routes/login.js");
 const GameRoute = require("./routes/game.js");
 const ItemRoute = require("./routes/item.js");
-const ACCService = require("./routes/ACCService.js")(client);
+const ACCService = require("./routes/ACCService.js");
 
 // Use Routes
 app.use("/login", LoginRoute);

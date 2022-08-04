@@ -4,9 +4,15 @@ const Game = require("../models/game.js");
 
 router.route("/:gameId").get((req, res) => {
     Game.findOne({ "id": req.params.gameId }).then(game => {
-        // TODO: remove ingame data if they don't meet the privacy requirement
         delete game.gdp;
-        res.json(game);
+        if (req.headers.ServerAuth == process.env.HASH) {
+            res.json(game);
+        } else {
+            // When Anolet releases, this will be uncommented, this is for legacy compatibility with preview
+            /* delete game.zones
+            delete game.worldSettings */
+            res.json(game);
+        }
     });
 });
 
