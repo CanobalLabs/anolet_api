@@ -50,9 +50,7 @@ const gameSchema = new Schema({
         type: String,
         required: true,
     },
-    carouselImages: [{
-        id: String,
-    }],
+    carouselImages: [String],
     playing: {
         type: Boolean,
         required: true,
