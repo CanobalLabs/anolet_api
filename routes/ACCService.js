@@ -6,7 +6,8 @@ const jwt = require('jsonwebtoken');
 router.route("/:gameId/requestGameLaunchAuthorization").get((req, res) => {
     Game.findOne({ "id": req.params.gameId }).then(game => {
         if (game == null) return res.status(404).send();
-        if (game.privacyLevel == 0) {
+        // for partial legacy compatibility
+        if (game.privacyLevel == 0 || game.privacyLevel == -1) {
             // Any user can access, authorize.
             res.send(jwt.sign({ game: req.params.gameId, user: res.locals.id }, process.env.HASH, { expiresIn: "30s" }));
         } else if (game.privacyLevel == 1) {
