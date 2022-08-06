@@ -194,7 +194,7 @@ router.route("/me/avatar").post(validate(avatarValidation, {}, {}), (req, res) =
 })
 
 router.route("/:userId").get((req, res) => {
-    User.findOne({ "id": req.params.userId }, "username about rank belongings avatar created defaultRender").then(user => {
+    User.findOne({ "id": req.params.userId }, "username about rank belongings avatar created defaultRender ranks").then(user => {
         res.json(user);
     });
 });
