@@ -25,8 +25,10 @@ router.route("/:gameId/increasePlayerCount").get((req, res) => {
     if (req.headers.serverauth == process.env.HASH) {
         Game.findOne({ "id": req.params.gameId }).then(game => {
             if (game == null) return res.status(404).send();
-            Game.updateOne({ id: req.params.gameId }, { $add: { visits: 1, playing: 1 } });
-            res.send();
+            Game.updateOne({ id: req.params.gameId }, { $add: { visits: 1, playing: 1 } }).then(() => {
+                console.log("Player count increased");
+                res.send();
+            });
         });
     } else res.status(403).send("You do not have permission to do that.");
 });
@@ -36,8 +38,10 @@ router.route("/:gameId/removePlayerCount").get((req, res) => {
         if (req.headers.serverauth == process.env.HASH) {
             Game.findOne({ "id": req.params.gameId }).then(game => {
                 if (game == null) return res.status(404).send();
-                Game.updateOne({ id: req.params.gameId }, { $add: { playing: -1 } });
-                res.send();
+                Game.updateOne({ id: req.params.gameId }, { $add: { playing: -1 } }).then(() => {
+                    console.log("Player count increased");
+                    res.send();
+                });
             });
         } else res.status(403).send("You do not have permission to do that.");
     });
