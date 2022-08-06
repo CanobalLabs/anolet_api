@@ -25,7 +25,7 @@ router.route("/:gameId/increasePlayerCount").get((req, res) => {
     if (req.headers.serverauth == process.env.HASH) {
         Game.findOne({ "id": req.params.gameId }).then(game => {
             if (game == null) return res.status(404).send();
-            Game.updateOne({ id: req.params.gameId }, { $add: { visits: 1, playing: 1 } }).then(() => {
+            Game.updateOne({ id: req.params.gameId }, { $inc: { visits: 1, playing: 1 } }).then(() => {
                 console.log("Player count increased");
                 res.send();
             });
@@ -38,7 +38,7 @@ router.route("/:gameId/removePlayerCount").get((req, res) => {
         if (req.headers.serverauth == process.env.HASH) {
             Game.findOne({ "id": req.params.gameId }).then(game => {
                 if (game == null) return res.status(404).send();
-                Game.updateOne({ id: req.params.gameId }, { $add: { playing: -1 } }).then(() => {
+                Game.updateOne({ id: req.params.gameId }, { $inc: { playing: -1 } }).then(() => {
                     console.log("Player count decreased");
                     res.send();
                 });
