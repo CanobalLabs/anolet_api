@@ -22,7 +22,7 @@ router.route("/:gameId/requestGameLaunchAuthorization").get((req, res) => {
 });
 
 router.route("/:gameId/increasePlayerCount").get((req, res) => {
-    if (req.headers.ServerAuth == process.env.HASH) {
+    if (req.headers.serverauth == process.env.HASH) {
         Game.findOne({ "id": req.params.gameId }).then(game => {
             if (game == null) return res.status(404).send();
             Game.updateOne({ id: req.params.gameId }, { $add: { visits: 1, playing: 1 } });
@@ -33,7 +33,7 @@ router.route("/:gameId/increasePlayerCount").get((req, res) => {
 
 router.route("/:gameId/removePlayerCount").get((req, res) => {
     Game.findOne({ "id": req.params.gameId }).then(game => {
-        if (req.headers.ServerAuth == process.env.HASH) {
+        if (req.headers.serverauth == process.env.HASH) {
             Game.findOne({ "id": req.params.gameId }).then(game => {
                 if (game == null) return res.status(404).send();
                 Game.updateOne({ id: req.params.gameId }, { $add: { playing: -1 } });
