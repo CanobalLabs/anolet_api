@@ -4,5 +4,9 @@
         "permissions": [
             "SHOP"
         ]
+    },
+    {
+        "id": "ADMIN_TAG",
+        "permissions": []
     }
 ]
