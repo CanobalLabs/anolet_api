@@ -39,7 +39,7 @@ router.route("/:gameId/removePlayerCount").get((req, res) => {
             Game.findOne({ "id": req.params.gameId }).then(game => {
                 if (game == null) return res.status(404).send();
                 Game.updateOne({ id: req.params.gameId }, { $add: { playing: -1 } }).then(() => {
-                    console.log("Player count increased");
+                    console.log("Player count decreased");
                     res.send();
                 });
             });
