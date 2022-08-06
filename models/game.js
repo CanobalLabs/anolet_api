@@ -52,7 +52,7 @@ const gameSchema = new Schema({
     },
     carouselImages: [String],
     playing: {
-        type: Boolean,
+        type: Number,
         required: true,
     },
     gdp: Number,
