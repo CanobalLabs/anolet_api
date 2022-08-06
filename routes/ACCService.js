@@ -22,16 +22,24 @@ router.route("/:gameId/requestGameLaunchAuthorization").get((req, res) => {
 });
 
 router.route("/:gameId/increasePlayerCount").get((req, res) => {
-    Game.findOne({ "id": req.params.gameId }).then(game => {
-        if (game == null) return res.status(404).send();
-        Game.updateOne({ id: req.params.gameId }, { $add: { visits: 1, playing: 1 } });
-    });
+    if (req.headers.ServerAuth == process.env.HASH) {
+        Game.findOne({ "id": req.params.gameId }).then(game => {
+            if (game == null) return res.status(404).send();
+            Game.updateOne({ id: req.params.gameId }, { $add: { visits: 1, playing: 1 } });
+            res.send();
+        });
+    } else res.status(403).send("You do not have permission to do that.");
 });
 
 router.route("/:gameId/removePlayerCount").get((req, res) => {
     Game.findOne({ "id": req.params.gameId }).then(game => {
-        if (game == null) return res.status(404).send();
-        Game.updateOne({ id: req.params.gameId }, { $add: { playing: -1 } }); // we don't decrease visits because visits is all-time
+        if (req.headers.ServerAuth == process.env.HASH) {
+            Game.findOne({ "id": req.params.gameId }).then(game => {
+                if (game == null) return res.status(404).send();
+                Game.updateOne({ id: req.params.gameId }, { $add: { playing: -1 } });
+                res.send();
+            });
+        } else res.status(403).send("You do not have permission to do that.");
     });
 });
 
