@@ -7,8 +7,8 @@ router.route("/s").get((req, res) => {
     var query = {};
     var page = 0;
     if (req.query.page) page = req.query.page
-    Game.find(query, undefined, { skip: 20 * page, limit: 20 }, function (err, results) {
-        res.json(results.sort({ playing: "desc" }))
+    Game.find(query, undefined, { skip: 20 * page, limit: 20, sort: { playing: "desc" } }, function (err, results) {
+        res.json(results)
     });
 });
 
