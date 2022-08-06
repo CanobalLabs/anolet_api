@@ -21,30 +21,26 @@ router.route("/:gameId/requestGameLaunchAuthorization").get((req, res) => {
     });
 });
 
-router.route("/:gameId/increasePlayerCount").get((req, res) => {
+router.route("/:gameId/increaseVisitCount").get((req, res) => {
     if (req.headers.serverauth == process.env.HASH) {
         Game.findOne({ "id": req.params.gameId }).then(game => {
             if (game == null) return res.status(404).send();
-            Game.updateOne({ id: req.params.gameId }, { $inc: { visits: 1, playing: 1 } }).then(() => {
-                console.log("Player count increased");
+            Game.updateOne({ id: req.params.gameId }, { $inc: { visits: 1 } }).then(() => {
                 res.send();
             });
         });
     } else res.status(403).send("You do not have permission to do that.");
 });
 
-router.route("/:gameId/removePlayerCount").get((req, res) => {
-    Game.findOne({ "id": req.params.gameId }).then(game => {
-        if (req.headers.serverauth == process.env.HASH) {
-            Game.findOne({ "id": req.params.gameId }).then(game => {
-                if (game == null) return res.status(404).send();
-                Game.updateOne({ id: req.params.gameId }, { $inc: { playing: -1 } }).then(() => {
-                    console.log("Player count decreased");
-                    res.send();
-                });
+router.route("/:gameId/setPlayerCount/:count").get((req, res) => {
+    if (req.headers.serverauth == process.env.HASH) {
+        Game.findOne({ "id": req.params.gameId }).then(game => {
+            if (game == null) return res.status(404).send();
+            Game.updateOne({ id: req.params.gameId }, { $set: { playing: req.params.count } }).then(() => {
+                res.send();
             });
-        } else res.status(403).send("You do not have permission to do that.");
-    });
+        });
+    } else res.status(403).send("You do not have permission to do that.");
 });
 
 module.exports = router
