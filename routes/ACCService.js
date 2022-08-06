@@ -36,9 +36,16 @@ router.route("/:gameId/setPlayerCount/:count").get((req, res) => {
     if (req.headers.serverauth == process.env.HASH) {
         Game.findOne({ "id": req.params.gameId }).then(game => {
             if (game == null) return res.status(404).send();
-            Game.updateOne({ id: req.params.gameId }, { $set: { playing: req.params.count } }).then(() => {
-                res.send();
-            });
+            if (req.params.gameId == 1) {
+                Game.updateOne({ id: req.params.gameId }, { $set: { playingP: req.params.count } }).then(() => {
+                    res.send();
+                });
+            } else {
+                Game.updateOne({ id: req.params.gameId }, { $set: { playing: req.params.count } }).then(() => {
+                    res.send();
+                });
+            }
+
         });
     } else res.status(403).send("You do not have permission to do that.");
 });

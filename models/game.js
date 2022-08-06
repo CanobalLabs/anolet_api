@@ -55,6 +55,7 @@ const gameSchema = new Schema({
         type: Number,
         required: true,
     },
+    playingP: Number,
     gdp: Number,
     totalHoursPlayed: {
         type: Number,
