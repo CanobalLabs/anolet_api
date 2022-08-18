@@ -28,7 +28,7 @@ router.route("/me").get((req, res) => {
     if (req.body.username) {
         // Check Username Exist
         User.findOne({ "username": req.body.username }).then(ue => {
-            if (ue !=== null && ue.id != res.locals.id) return req.status(400).send("Username is taken")
+            if (ue !== null && ue.id != res.locals.id) return req.status(400).send("Username is taken")
         });
     }
     User.findOneAndUpdate(
