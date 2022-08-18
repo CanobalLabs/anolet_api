@@ -25,6 +25,12 @@ router.route("/me").get((req, res) => {
 }).post(validate(validation, {}, {}), async (req, res) => {
     if (!res.locals.id) return req.status(401).send("Unauthorized");
     if (req.body.username && /^[a-zA-Z0-9_.-]*$/.test(req.body.username) == false) return req.status(400).send("Bad UN")
+    if (req.body.username) {
+        // Check Username Exist
+        User.findOne({ "username": req.body.username }).then(ue => {
+            if (ue !=== null && ue.id != res.locals.id) return req.status(400).send("Username is taken")
+        });
+    }
     User.findOneAndUpdate(
         {
             "id": res.locals.id
