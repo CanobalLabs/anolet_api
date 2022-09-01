@@ -84,6 +84,7 @@ router.route("/:itemId/purchase").post((req, res) => {
 
 router.route("/:itemId").get((req, res) => {
     Item.findOne({ "id": req.params.itemId }).then(item => {
+        if (item == null) return res.status(404).send()
         res.json(item);
     });
 }).patch(Permission("SHOP"), validate(validationEdit, {}, {}), (req, res) => {

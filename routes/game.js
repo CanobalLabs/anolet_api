@@ -14,6 +14,7 @@ router.route("/s").get((req, res) => {
 
 router.route("/:gameId").get((req, res) => {
     Game.findOne({ "id": req.params.gameId }).then(game => {
+        if (game == null) return res.status(404).send()
         delete game.gdp;
         if (req.params.gameId == 1 || req.headers.serverauth == process.env.HASH) {
             res.json(game);
