@@ -15,7 +15,7 @@ router.route("/s").get((req, res) => {
 router.route("/:gameId").get((req, res) => {
     Game.findOne({ "id": req.params.gameId }).then(game => {
         delete game.gdp;
-        if (req.headers.serverauth == process.env.HASH || req.params.gameId == 1) {
+        if (req.params.gameId == 1 || req.headers.serverauth == process.env.HASH) {
             res.json(game);
         } else {
             delete game.zones
