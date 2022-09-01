@@ -18,8 +18,8 @@ router.route("/:gameId").get((req, res) => {
         if (req.params.gameId == 1 || req.headers.serverauth == process.env.HASH) {
             res.json(game);
         } else {
-            delete game.zones
-            delete game.worldSettings
+            game.zones = undefined;
+            game.worldSettings = undefined;
             res.json(game);
         }
     });
