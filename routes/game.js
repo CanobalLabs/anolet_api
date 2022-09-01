@@ -15,12 +15,11 @@ router.route("/s").get((req, res) => {
 router.route("/:gameId").get((req, res) => {
     Game.findOne({ "id": req.params.gameId }).then(game => {
         delete game.gdp;
-        if (req.headers.serverauth == process.env.HASH) {
+        if (req.headers.serverauth == process.env.HASH || req.params.gameId == 1) {
             res.json(game);
         } else {
-            // When Anolet releases, this will be uncommented, this is for legacy compatibility with preview
-            /* delete game.zones
-            delete game.worldSettings */
+            delete game.zones
+            delete game.worldSettings
             res.json(game);
         }
     });
