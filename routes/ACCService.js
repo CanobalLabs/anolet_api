@@ -3,7 +3,7 @@ let router = express.Router();
 const Game = require("../models/game.js");
 const jwt = require('jsonwebtoken');
 
-router.route("/:gameId/requestGameLaunchAuthorization").get((req, res) => {
+router.route("/:gameId/requestGameLaunchAuthorization").post((req, res) => {
     Game.findOne({ "id": req.params.gameId }).then(game => {
         if (game == null) return res.status(404).send();
         // for partial legacy compatibility
@@ -21,7 +21,7 @@ router.route("/:gameId/requestGameLaunchAuthorization").get((req, res) => {
     });
 });
 
-router.route("/:gameId/increaseVisitCount").get((req, res) => {
+router.route("/:gameId/increaseVisitCount").patch((req, res) => {
     if (req.headers.serverauth == process.env.HASH) {
         Game.findOne({ "id": req.params.gameId }).then(game => {
             if (game == null) return res.status(404).send();
@@ -32,7 +32,7 @@ router.route("/:gameId/increaseVisitCount").get((req, res) => {
     } else res.status(403).send("You do not have permission to do that.");
 });
 
-router.route("/:gameId/setPlayerCount/:count").get((req, res) => {
+router.route("/:gameId/setPlayerCount/:count").patch((req, res) => {
     if (req.headers.serverauth == process.env.HASH) {
         Game.findOne({ "id": req.params.gameId }).then(game => {
             if (game == null) return res.status(404).send();
