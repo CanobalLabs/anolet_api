@@ -12,6 +12,7 @@ router.route("/:gameId/requestGameLaunchAuthorization").post((req, res) => {
             res.send(jwt.sign({ game: req.params.gameId, user: res.locals.id }, process.env.HASH, { expiresIn: "30s" }));
         } else if (game.privacyLevel == 1) {
             // Only the creator can access, check
+            console.log(res.locals.id, game.creator.id)
             if (res.locals.id == game.creator.id) {
                 res.send(jwt.sign({ game: req.params.gameId, user: res.locals.id }, process.env.HASH, { expiresIn: "30s" }));
             } else {
