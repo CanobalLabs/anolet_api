@@ -19,6 +19,7 @@ const endpoints = {
 router.route("/me").get((req, res) => {
     if (!res.locals.id) return res.send("Unauthorized");
     User.findOne({ id: res.locals.id }).then(user => {
+        user.userId = res.locals.id
         user.password = undefined;
         res.json(user);
     });
