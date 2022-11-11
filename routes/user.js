@@ -179,7 +179,7 @@ router.route("/me/avatar").post(validate(avatarValidation, {}, {}), (req, res) =
                 // and now render it...
                 mergeImages([
                     `${cdn}/items/${req.body.bodies[0]}/internal.png`,
-                    { src: `${cdn}/items/${req.body.faces[0]}/internal.png`, y: 20 },
+                    { src: `${cdn}/items/${req.body.faces[0]}/internal.png`, y: req.body.faceOffset || 20 },
                     req.body.shoes[0] ? `${cdn}/items/${req.body.shoes[0]}/internal.png` : `${cdn}/templates/blank.png`,
                     req.body.hats[0] ? `${cdn}/items/${req.body.hats[0]}/internal.png` : `${cdn}/templates/blank.png`,
                     req.body.hats[1] ? `${cdn}/items/${req.body.hats[1]}/internal.png` : `${cdn}/templates/blank.png`,
