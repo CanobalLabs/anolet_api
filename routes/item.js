@@ -36,7 +36,7 @@ router.route("/s").get((req, res) => {
     var page = 0;
     if (req.query.type) query = { type: req.query.type }
     if (req.query.page) page = req.query.page
-    Item.find(query, undefined, { skip: 20 * page, limit: 20 }, function (err, results) {
+    Item.find(query, undefined/*, { skip: 20 * page, limit: 20 }*/, function (err, results) {
         res.json(results)
     });
 });
