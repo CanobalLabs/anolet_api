@@ -34,7 +34,7 @@ router.route("/s").get((req, res) => {
     // remember for frontend devs, pages start at 0 on the backend
     var query = {};
     var page = 0;
-    if (req.header["x-anolet-filter"]) query = { type: req.header["x-anolet-filter"] }
+    if (req.headers["x-anolet-filter"]) query = { type: req.headers["x-anolet-filter"] }
     if (req.query.page) page = req.query.page
     Item.find(query, undefined/*, { skip: 20 * page, limit: 20 }*/, function (err, results) {
         res.json(results)
