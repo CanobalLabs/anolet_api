@@ -89,8 +89,8 @@ router.route("/:itemId/purchase").post((req, res) => {
         User.findOne({ "id": res.locals.id }).then(usr => {
             if (!(price > usr.amulets) && !usr.belongings[item.type].includes(item.id)) {
                 // they can buy
-                User.updateOne({ id: res.locals.id }, { $push: { "belongings.${itype}": item.id }, $inc: { "amulets": -item.price } }, { arrayFilters: [{ itype: plural }] });
-                User.updateOne({ id: item.owner }, { $inc: { amulets: item.price } });
+                User.updateOne({ id: res.locals.id }, { $push: { ["belongings." + plural]: item.id }, $inc: { "amulets": -price } });
+                User.updateOne({ id: item.owner }, { $inc: { amulets: price } });
                 res.send("Purchase Successful")
             } else return res.status(400).send("Insufficient balance or you already own this item.")
         });
