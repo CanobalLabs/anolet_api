@@ -67,6 +67,21 @@ router.route("/:itemId/purchase").post((req, res) => {
     Item.findOne({ "id": req.params.itemId }).then(item => {
         if (item == null) return res.status(400).send("That item doesn't exist.");
         var price;
+        var plural;
+         switch (item.type) {
+      case "hat":
+        filterType = "hats"
+        break;
+      case "body":
+        filterType = "bodies"
+        break;
+      case "face":
+        filterType = "faces"
+        break;
+      case "shoes":
+        filterType = "shoes"
+        break;
+    }
         if (new Date(item.saleEnd) >= new Date()) {
             // item is on sale
             price == item.salePrice
@@ -74,8 +89,8 @@ router.route("/:itemId/purchase").post((req, res) => {
         User.findOne({ "id": res.locals.id }).then(usr => {
             if (!(price > usr.amulets) && !usr.belongings[item.type].includes(item.id)) {
                 // they can buy
-                User.updateOne({ id: res.locals.id }, { $push: { "belongings.${itype}": 1 }, $inc: { "amulets": -price } }, { arrayFilters: [{ itype: item.type }] });
-                User.updateOne({ id: item.owner }, { $inc: { amulets: price } });
+                User.updateOne({ id: res.locals.id }, { $push: { "belongings.${itype}": item.id }, $inc: { "amulets": -item.price } }, { arrayFilters: [{ itype: plural }] });
+                User.updateOne({ id: item.owner }, { $inc: { amulets: item.price } });
                 res.send("Purchase Successful")
             } else return res.status(400).send("Insufficient balance or you already own this item.")
         });
