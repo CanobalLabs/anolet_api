@@ -70,16 +70,16 @@ router.route("/:itemId/purchase").post((req, res) => {
         var plural;
          switch (item.type) {
       case "hat":
-        filterType = "hats"
+        plural = "hats"
         break;
       case "body":
-        filterType = "bodies"
+        plural = "bodies"
         break;
       case "face":
-        filterType = "faces"
+        plural = "faces"
         break;
       case "shoes":
-        filterType = "shoes"
+        plural = "shoes"
         break;
     }
         if (new Date(item.saleEnd) >= new Date()) {
