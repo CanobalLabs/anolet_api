@@ -40,7 +40,7 @@
     "merge-images": "^2.0.0",
     "minio": "^7.0.28",
     "mkdirp": "^1.0.4",
-    "mongoose": "^6.3.6",
+    "mongoose": "^6.7.2",
     "multer": "^1.4.5-lts.1",
     "newrelic": "^8.14.1",
     "node-html-to-image": "^3.2.4",
