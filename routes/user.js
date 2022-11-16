@@ -160,10 +160,9 @@ router.route("/me/avatar").post(validate(avatarValidation, {}, {}), (req, res) =
     if (!res.locals.id) return res.status(401).send("Unauthorized");
     User.findOne({ id: res.locals.id }).then(usr => {
         // Jumble up all item ids, then make sure the user owns them
-        var owneditems = usr.belongings.hats.concat(usr.belongings.bodies, usr.belongings.faces, usr.belongings.shoes)
         var chosenitems = req.body.hats.concat(req.body.bodies, req.body.faces, req.body.shoes)
         chosenitems.forEach((item, index) => {
-            if (!owneditems.includes(item)) {
+            if (!usr.belongings.includes(item)) {
                 return res.status(400).send("You do not own 1 or more of these items.");
             }
             if (index + 1 == chosenitems.length) {
