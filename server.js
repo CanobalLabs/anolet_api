@@ -26,10 +26,10 @@ app.use(function(req, res, next) {
 });
 
 // Import Routes
-const UserRoute = require("./routes/user.js");
+// const UserRoute = require("./routes/user.js");
 const LoginRoute = require("./routes/login.js");
 const GameRoute = require("./routes/game.js");
-const ItemRoute = require("./routes/item.js");
+// const ItemRoute = require("./routes/item.js");
 const ACCService = require("./routes/ACCService.js");
 
 // Use Routes
