@@ -34,9 +34,9 @@ const ACCService = require("./routes/ACCService.js");
 
 // Use Routes
 app.use("/login", LoginRoute);
-app.use("/user", UserRoute);
+// app.use("/user", UserRoute);
 app.use("/game", GameRoute);
-app.use("/item", ItemRoute);
+// app.use("/item", ItemRoute);
 app.use("/ACCService", ACCService);
 
 // Error Handler
