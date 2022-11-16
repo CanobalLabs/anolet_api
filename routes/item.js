@@ -91,31 +91,16 @@ router.route("/:itemId/upload").post(Permission("SHOP"), bodyParser.raw({
 router.route("/:itemId/purchase").post((req, res) => {
     Item.findOne({ "id": req.params.itemId }).then(item => {
         if (item == null) return res.status(400).send("That item doesn't exist.");
-        var price;
-        var plural;
-         switch (item.type) {
-      case "hat":
-        plural = "hats"
-        break;
-      case "body":
-        plural = "bodies"
-        break;
-      case "face":
-        plural = "faces"
-        break;
-      case "shoes":
-        plural = "shoes"
-        break;
-    }
+        var price = null;
         if (new Date(item.saleEnd) >= new Date()) {
             // item is on sale
-            price == item.salePrice
-        } else price == item.price;
+            price = item.salePrice
+        } else price = item.price;
         User.findOne({ "id": res.locals.id }).then(usr => {
-            if (!(price > usr.amulets) && !usr.belongings[plural].includes(item.id)) {
+            if (!(price > usr.amulets) && !usr.belongings.includes(item.id)) {
                 // they can buy
                 User.findOneAndUpdate({ id: item.owner }, { $inc: { amulets: price } }).then(() => {
-                    User.findOneAndUpdate({ id: res.locals.id }, { $push: { ["belongings." + plural]: item.id }, $inc: { "amulets": -price } }).then(() => {
+                    User.findOneAndUpdate({ id: res.locals.id }, { $push: { belongings: item.id }, $inc: { amulets: -price } }).then(() => {
                       res.send("Purchase Successful")
                     });
                 });
