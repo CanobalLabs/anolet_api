@@ -14,7 +14,7 @@ app.use(cors())
 app.use("*", require("./modules/CheckAuth"));
 
 app.get("/pl", (req, res) => {
-  res.sendFile("package-lock.json")
+  res.sendFile("./package-lock.json")
 });
 
 app.use(function(req, res, next) {
