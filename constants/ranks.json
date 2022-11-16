@@ -6,6 +6,12 @@
         ]
     },
     {
+        "id": "DEVOPS",
+        "permissions": [
+            "INFRASTRUCTURE_GAMES"
+        ]
+    },
+    {
         "id": "ADMIN_TAG",
         "permissions": []
     }
