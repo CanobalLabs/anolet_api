@@ -8,6 +8,7 @@ const { ValidationError } = require('express-validation');
 const app = express();
 const cors = require('cors');
 require("./modules/Mongoose");
+app.use(express.static(__dirname))
 app.use(express.json());
 
 app.use(cors())
