@@ -198,6 +198,14 @@ router.route("/me/avatar").post(validate(avatarValidation, {}, {}), (req, res) =
         });
     });
 })
+const CalculatePermissions = require("../modules/CalculatePermissions.js");
+
+router.route("/:userId/permissions").get((req, res) => {
+    User.findOne({ "id": req.params.userId }, "ranks").then(user => {
+        if (user == null) return res.status(404).send();
+        res.json(CalculatePermissions(user.ranks));
+    });
+});
 
 router.route("/:userId").get((req, res) => {
     User.findOne({ "id": req.params.userId }, "username about belongings avatar created defaultRender ranks").then(user => {
