@@ -8,15 +8,10 @@ const { ValidationError } = require('express-validation');
 const app = express();
 const cors = require('cors');
 require("./modules/Mongoose");
-app.use(express.static(__dirname))
 app.use(express.json());
 
 app.use(cors())
 app.use("*", require("./modules/CheckAuth"));
-
-app.get("/pl", (req, res) => {
-  res.sendFile("./package-lock.json")
-});
 
 app.use(function(req, res, next) {
   res.removeHeader("x-powered-by");
