@@ -6,7 +6,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    belongings: require("../schemas/belongings"),
+    belongings: [String],
     avatar: require("../schemas/belongings"),
     defaultRender: {
         type: Boolean,
