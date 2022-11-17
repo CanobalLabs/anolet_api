@@ -34,6 +34,7 @@ router.route("/s").get(async (req, res) => {
     var query = { available: true };
     var search = "";
     if (req.headers["x-anolet-filter"]) query = { type: req.headers["x-anolet-filter"], available: true }
+    if (req.headers["x-anolet-filter"] == "my-creations") query = { manager: res.locals.id }
     if (req.headers["x-anolet-search"]) { search = req.headers["x-anolet-search"]; query.$text = { $search: search }; }
     var dbresp = Item.find(query, search ? { score: { $meta: "textScore" } } : undefined);
 
