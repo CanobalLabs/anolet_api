@@ -81,7 +81,7 @@ router.route("/:itemId/upload").post(Permission("SHOP"), bodyParser.raw({
                     Item.findOneAndUpdate(
                         { id: req.params.itemId }, {
                         assetURL: `items/${req.params.itemId}/internal.png`,
-                        previewURL: `items/${req.params.itemId}/internal.png`,
+                        previewURL: `items/${req.params.itemId}/preview.png`,
                     }).then(() => res.send("Item image set"));
                 });
             });
