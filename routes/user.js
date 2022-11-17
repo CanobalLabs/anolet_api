@@ -168,7 +168,7 @@ router.route("/me/avatar").post(validate(avatarValidation, {}, {}), (req, res) =
             if (index + 1 == chosenitems.length) {
                 res.setHeader("content-type", "image/png");
                 // all good, let's set their avatar...
-                User.findOneAndUpdate({ id: res.locals.id }, {
+                User.updateOne({ id: res.locals.id }, {
                     avatar: {
                         accessories: req.body.accessories,
                         bodies: req.body.bodies,
@@ -237,7 +237,7 @@ router.route("/:userId/avatar").get((req, res) => {
         if (user.defaultRender) {
             res.redirect("https://cdn.anolet.com/avatars/anolet/preview.png")
         } else {
-            res.redirect("https://cdn.anolet.com/avatars/" + req.params.id + "/preview.png")
+            res.redirect("https://cdn.anolet.com/avatars/" + req.params.userId + "/preview.png")
         }
     });
 });
