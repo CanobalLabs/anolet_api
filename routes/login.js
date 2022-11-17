@@ -25,13 +25,13 @@ router.post("/signup", validate(validation, {}, {}), async (req, res) => {
             password: hash, amulets: 100,
             about: "I don't have a bio, but I can change that!",
             belongings: {
-                hats: ["a05b72b1-15b2-4d4a-b45e-1d1a9488bd4d"],
+                accessories: ["a05b72b1-15b2-4d4a-b45e-1d1a9488bd4d"],
                 bodies: ["3d62ac6b-b48f-43ac-a8bf-f43040e75111"],
                 faces: ["0aff884e-112b-45dd-afd3-afa1ff3ec3c2"],
                 shoes: []
             },
             avatar: {
-                hats: ["a05b72b1-15b2-4d4a-b45e-1d1a9488bd4d"],
+                accessories: ["a05b72b1-15b2-4d4a-b45e-1d1a9488bd4d"],
                 bodies: ["3d62ac6b-b48f-43ac-a8bf-f43040e75111"],
                 faces: ["0aff884e-112b-45dd-afd3-afa1ff3ec3c2"],
                 shoes: []

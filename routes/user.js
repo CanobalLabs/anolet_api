@@ -160,7 +160,7 @@ router.route("/me/avatar").post(validate(avatarValidation, {}, {}), (req, res) =
     if (!res.locals.id) return res.status(401).send("Unauthorized");
     User.findOne({ id: res.locals.id }).then(usr => {
         // Jumble up all item ids, then make sure the user owns them
-        var chosenitems = req.body.hats.concat(req.body.bodies, req.body.faces, req.body.shoes)
+        var chosenitems = req.body.accessories.concat(req.body.bodies, req.body.faces, req.body.shoes)
         chosenitems.forEach((item, index) => {
             if (!usr.belongings.includes(item)) {
                 return res.status(400).send("You do not own 1 or more of these items.");
@@ -170,7 +170,7 @@ router.route("/me/avatar").post(validate(avatarValidation, {}, {}), (req, res) =
                 // all good, let's set their avatar...
                 User.findOneAndUpdate({ id: res.locals.id }, {
                     avatar: {
-                        hats: req.body.hats,
+                        accessories: req.body.accessories,
                         bodies: req.body.bodies,
                         shoes: req.body.shoes,
                         faces: req.body.faces
@@ -184,9 +184,9 @@ router.route("/me/avatar").post(validate(avatarValidation, {}, {}), (req, res) =
                     `${cdn}/items/${req.body.bodies[0]}/internal.png`,
                     { src: `${cdn}/items/${req.body.faces[0]}/internal.png`, y: req.body.faceOffset || 20 },
                     req.body.shoes[0] ? `${cdn}/items/${req.body.shoes[0]}/internal.png` : `${cdn}/templates/blank.png`,
-                    req.body.hats[0] ? `${cdn}/items/${req.body.hats[0]}/internal.png` : `${cdn}/templates/blank.png`,
-                    req.body.hats[1] ? `${cdn}/items/${req.body.hats[1]}/internal.png` : `${cdn}/templates/blank.png`,
-                    req.body.hats[2] ? `${cdn}/items/${req.body.hats[2]}/internal.png` : `${cdn}/templates/blank.png`,
+                    req.body.accessories[0] ? `${cdn}/items/${req.body.accessories[0]}/internal.png` : `${cdn}/templates/blank.png`,
+                    req.body.accessories[1] ? `${cdn}/items/${req.body.accessories[1]}/internal.png` : `${cdn}/templates/blank.png`,
+                    req.body.accessories[2] ? `${cdn}/items/${req.body.accessories[2]}/internal.png` : `${cdn}/templates/blank.png`,
                 ], {
                     Canvas: Canvas,
                     Image: Image
