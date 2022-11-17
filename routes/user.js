@@ -231,6 +231,17 @@ router.route("/:userId/permissions").get((req, res) => {
     });
 });
 
+router.route("/:userId/avatar").get((req, res) => {
+    User.findOne({ "id": req.params.userId }, "defaultRender").then(user => {
+        if (user == null) return res.status(404).send()
+        if (user.defaultRender) {
+            res.redirect("https://cdn.anolet.com/avatars/anolet/preview.png")
+        } else {
+            res.redirect("https://cdn.anolet.com/avatars/" + req.params.id + "/preview.png")
+        }
+    });
+});
+
 router.route("/:userId").get((req, res) => {
     User.findOne({ "id": req.params.userId }, "username about belongings avatar created defaultRender ranks").then(user => {
         if (user == null) return res.status(404).send()
