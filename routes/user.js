@@ -242,6 +242,13 @@ router.route("/:userId/avatar").get((req, res) => {
     });
 });
 
+router.route("/:userId/username").get((req, res) => {
+    User.findOne({ "id": req.params.userId }, "username").then(user => {
+        if (user == null) return res.status(404).send()
+        res.send(user.username)
+    });
+});
+
 router.route("/:userId").get((req, res) => {
     User.findOne({ "id": req.params.userId }, "username about belongings avatar created defaultRender ranks").then(user => {
         if (user == null) return res.status(404).send()
