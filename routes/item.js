@@ -19,10 +19,9 @@ router.route("/").post(Permission("SHOP"), validate(validation, {}, {}), (req, r
         manager: req.body.id,
         type: req.body.type,
         price: req.body.price,
-        assetURL: "",
-        previewURL: "",
         saleEnd: '1',
         salePrice: 0,
+        assetUploaded: false,
         available: false,
         id: genid,
         created: new Date()
@@ -32,18 +31,18 @@ router.route("/").post(Permission("SHOP"), validate(validation, {}, {}), (req, r
 
 router.route("/s").get(async (req, res) => {
     // remember for frontend devs, pages start at 0 on the backend
-    var query = {};
+    var query = { available: true };
     var search = "";
-    if (req.headers["x-anolet-filter"]) query = { type: req.headers["x-anolet-filter"] }
-    if (req.headers["x-anolet-search"]) search = req.headers.search
-    var dbresp = await Item.find(query, search ? { score: { $meta: "textScore" } } : undefined);
+    if (req.headers["x-anolet-filter"]) query = { type: req.headers["x-anolet-filter"], available: true }
+    if (req.headers["x-anolet-search"]) { search = req.headers["x-anolet-search"]; query.$text = { $search: search }; }
+    var dbresp = Item.find(query, search ? { score: { $meta: "textScore" } } : undefined);
 
-        if (search) {
-            dbresp.sort({ score: { $meta: "textScore" } }).exec((err, docs) => { res.json(docs) });
-        } else {
-            dbresp.exec((err, docs) => { res.json(docs) });
-        }
-   
+    if (search) {
+        dbresp.sort({ score: { $meta: "textScore" } }).exec((err, docs) => { res.json(docs) });
+    } else {
+        dbresp.exec((err, docs) => { res.json(docs) });
+    }
+
 });
 
 const sharp = require('sharp');
@@ -85,8 +84,7 @@ router.route("/:itemId/upload").post(Permission("SHOP"), bodyParser.raw({
                     if (err) return res.status(500).send();
                     Item.findOneAndUpdate(
                         { id: req.params.itemId }, {
-                        assetURL: `items/${req.params.itemId}/internal.png`,
-                        previewURL: `items/${req.params.itemId}/preview.png`,
+                        assetUploaded: true,
                     }).then(() => res.send("Item image set"));
                 });
             });
@@ -104,9 +102,11 @@ router.route("/:itemId/purchase").post((req, res) => {
         User.findOne({ "id": res.locals.id }).then(usr => {
             if (!(price > usr.amulets) && !usr.belongings.includes(item.id)) {
                 // they can buy
-                User.findOneAndUpdate({ id: item.owner }, { $inc: { amulets: price } }).then(() => {
-                    User.findOneAndUpdate({ id: res.locals.id }, { $push: { belongings: item.id }, $inc: { amulets: -price } }).then(() => {
-                      res.send("Purchase Successful")
+                User.updateOne({ id: item.owner }, { $inc: { amulets: price } }).then(() => {
+                    User.updateOne({ id: res.locals.id }, { $push: { belongings: item.id }, $inc: { amulets: -price } }).then(() => {
+                        Item.updateOne({ id: item.id }, { $inc: { sales: 1 } }).then(() => {
+                            res.send("Purchase Successful")
+                        });
                     });
                 });
             } else return res.status(400).send("Insufficient balance or you already own this item.")

@@ -209,6 +209,7 @@ router.route("/me/avatar").post(validate(avatarValidation, {}, {}), (req, res) =
                                             minio.putObject('anolet', `avatars/${res.locals.id}/preview.png`, data, function (err, etag) {
                                                 console.log(err);
                                                 fs.unlink(fileName, (err) => { if (err) throw err });
+                                                fs.unlink(trimName, (err) => { if (err) throw err });
                                                 res.send(calculatedAvatarBuffer);
                                             });
                                         });

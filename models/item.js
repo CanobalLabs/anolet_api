@@ -22,8 +22,10 @@ const itemSchema = new Schema({
         type: String,
         required: true,
     },
-    assetURL: String,
-    previewURL: String,
+    assetUploaded: {
+        type: Boolean,
+        required: true
+    },
     price: {
         type: Number,
         required: true,
@@ -44,12 +46,16 @@ const itemSchema = new Schema({
         type: Boolean,
         required: true,
     },
+    sales: {
+        type: Number,
+        required: true,
+    },
     id: {
         type: String,
         required: true,
     },
 });
 
-itemSchema.index({name: 'text', owner: 'text', description: 'text'});
+itemSchema.index({name: 'text', description: 'text'});
 const Item = mongoose.model("Item", itemSchema);
 module.exports = Item;
