@@ -30,15 +30,20 @@ router.route("/").post(Permission("SHOP"), validate(validation, {}, {}), (req, r
     res.send(genid);
 })
 
-router.route("/s").get((req, res) => {
+router.route("/s").get(async (req, res) => {
     // remember for frontend devs, pages start at 0 on the backend
     var query = {};
-    var page = 0;
+    var search = "";
     if (req.headers["x-anolet-filter"]) query = { type: req.headers["x-anolet-filter"] }
-    if (req.query.page) page = req.query.page
-    Item.find(query, undefined/*, { skip: 20 * page, limit: 20 }*/, function (err, results) {
-        res.json(results)
-    });
+    if (req.headers["x-anolet-search"]) search = req.headers.search
+    var dbresp = await Item.find(query, search ? { score: { $meta: "textScore" } } : undefined);
+
+        if (search) {
+            dbresp.sort({ score: { $meta: "textScore" } }).exec((err, docs) => { res.json(docs) });
+        } else {
+            dbresp.exec((err, docs) => { res.json(docs) });
+        }
+   
 });
 
 const sharp = require('sharp');
