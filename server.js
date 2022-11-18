@@ -7,11 +7,24 @@ const express = require("express");
 const { ValidationError } = require('express-validation');
 const app = express();
 const cors = require('cors');
+const fs = require("fs");
+const path = require("path");
 require("./modules/Mongoose");
 app.use(express.json());
 
 app.use(cors())
 app.use("*", require("./modules/CheckAuth"));
+
+app.get("/asset/specialitem-1/:hex", (req, res) => {
+  fs.readFile(path.join(__dirname, '/generator/Body.svg'), function read(err, data) {
+    if (err) {
+        throw err;
+    }
+  
+    res.setHeader("Content-Type", "image/svg+xml");
+    res.send(data.replace("<$bodyColor$>", "#" + req.params.hex));
+  });
+});
 
 app.use(function(req, res, next) {
   res.removeHeader("x-powered-by");
