@@ -10,13 +10,14 @@ const validation = require("../validation/item.js");
 const validationEdit = require("../validation/itemEdit.js");
 const { v4: uuidv4 } = require('uuid');
 
-router.route("/").post(Permission("SHOP"), validate(validation, {}, {}), (req, res) => {
+router.route("/").post(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), validate(validation, {}, {}), (req, res) => {
     var genid = uuidv4()
+    if (res.locals.permissions.includes("UPLOAD_ANOLET") && req.body.anoletAccount) return res.status(403).send("You can't upload to the Anolet account");
     new Item({
         name: req.body.name,
         description: req.body.description,
-        owner: req.body.anoletAccount ? "anolet" : req.body.id,
-        manager: req.body.id,
+        owner: req.body.anoletAccount ? "anolet" : res.locals.id,
+        manager: req.locals.id,
         type: req.body.type,
         price: req.body.price,
         saleEnd: '1',
@@ -51,13 +52,15 @@ const trimImage = require("trim-image");
 var fs = require('fs');
 const path = require('path');
 
-router.route("/:itemId/upload").post(Permission("SHOP"), bodyParser.raw({
+router.route("/:itemId/upload").post(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), bodyParser.raw({
     inflate: true,
     limit: '100mb',
     type: 'image/png'
 }), (req, res) => {
-    Item.findOne({ id: req.params.itemId }).then(async resp => {
-        if (req.body == {}) return res.status(400).send("Invalid body")
+    Item.findOne({ id: req.params.itemId }, "manager available").then(async resp => {
+        if (req.body == {}) return res.status(400).send("Invalid body");
+        if (resp.manager != res.locals.id) return res.status(403).send("You don't manage this item.");
+        if (resp.available == true) return res.status(400).send("You can't change an item's asset after it has been released.");
         sharp(req.body)
             .resize(1000, 1000)
             .toBuffer()
@@ -121,8 +124,9 @@ router.route("/:itemId").get((req, res) => {
         res.json(item);
     });
 }).patch(Permission("SHOP"), validate(validationEdit, {}, {}), (req, res) => {
-    Item.findOne({ id: req.params.itemId }).then(resp => {
-        if (resp && resp.manager == req.body.id) {
+    Item.findOne({ id: req.params.itemId }, "available").then(resp => {
+        if (resp && resp.manager == res.locals.id) {
+            if (resp.available && (req.body.type || req.body.available)) return res.status(400).send("You cannot change item type or availability after an item has been released");
             Item.findOneAndUpdate({ id: req.params.itemId }, {
                 name: req.body.name,
                 description: req.body.description,
