@@ -12,11 +12,11 @@ const { v4: uuidv4 } = require('uuid');
 
 router.route("/").post(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), validate(validation, {}, {}), (req, res) => {
     var genid = uuidv4()
-    if (res.locals.permissions.includes("UPLOAD_ANOLET") && req.body.anoletAccount) return res.status(403).send("You can't upload to the Anolet account");
+    if (res.locals.permissions.includes("UPLOAD_ANOLET") && req.body?.anoletAccount) return res.status(403).send("You can't upload to the Anolet account");
     new Item({
         name: req.body.name,
         description: req.body.description,
-        owner: req.body.anoletAccount ? "anolet" : res.locals.id,
+        owner: req.body?.anoletAccount ? "anolet" : res.locals.id,
         manager: req.locals.id,
         type: req.body.type,
         price: req.body.price,
