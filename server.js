@@ -16,12 +16,13 @@ app.use(cors())
 app.use("*", require("./modules/CheckAuth"));
 
 app.get("/asset/specialitem-1/:hex", (req, res) => {
-  fs.readFile(path.join(__dirname, '/generator/Body.svg'), function read(err, data) {
+  fs.readFile(path.join(__dirname, '/generator') + "/Body.svg", function read(err, data) {
     if (err) {
         throw err;
     }
   
     res.setHeader("Content-Type", "image/svg+xml");
+    console.log(data)
     res.send(data.replace("<$bodyColor$>", "#" + req.params.hex));
   });
 });
