@@ -2,17 +2,33 @@
     {
         "id": "UGC",
         "permissions": [
-            "SHOP"
+            "UPLOAD_SELF"
+        ]
+    },
+    {
+        "id": "GLOBAL_GRAPHICS",
+        "permissions": [
+            "UPLOAD_ANOLET"
         ]
     },
     {
         "id": "DEVOPS",
         "permissions": [
-            "INFRASTRUCTURE_GAMES"
+            "INFRASTRUCTURE_GAMES",
+            "INFRASTRUCTURE_SITE",
+            "INFRASTRUCTURE_AVATAR"
+        ]
+    },
+    {
+        "id": "SITE_ADMIN",
+        "permissions": [
+            "MANAGE_SITE"
         ]
     },
     {
         "id": "ADMIN_TAG",
-        "permissions": []
+        "permissions": [
+            "ADMIN_TAG"
+        ]
     }
 ]
