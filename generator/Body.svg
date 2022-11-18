@@ -1,4 +1,4 @@
 <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
   <defs></defs>
-  <ellipse style="stroke-width: 0px; fill: rgb(254, 205, 77);" cx="500" cy="500" rx="137" ry="137"></ellipse>
+  <ellipse style="stroke-width: 0px; fill: <$bodyColor$>" cx="500" cy="500" rx="137" ry="137"></ellipse>
 </svg>
