@@ -22,8 +22,7 @@ app.get("/asset/specialitem-1/:hex", (req, res) => {
     }
   
     res.setHeader("Content-Type", "image/svg+xml");
-    console.log(data)
-    res.send(data.replace("<$bodyColor$>", "#" + req.params.hex));
+    res.send(data.toString().replace("<$bodyColor$>", "#" + req.params.hex));
   });
 });
 
