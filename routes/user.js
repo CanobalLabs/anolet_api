@@ -165,7 +165,7 @@ router.route("/me/avatar").post(validate(avatarValidation, {}, {}), (req, res) =
             if (!usr.belongings.includes(item)) {
                 return res.status(400).send("You do not own 1 or more of these items.");
             }
-            if ((req.body.bodies[0] == "specialitem-1" && !req.body?.bodyColor) || !/^#([0-9a-f]{3}){1,2}$/i.test('#' + req.body.bodyColor)) {
+            if (req.body.bodies[0] == "specialitem-1" && (!req.body?.bodyColor || !/^#([0-9a-f]{3}){1,2}$/i.test('#' + req.body.bodyColor))) {
                 // Invalid settings for custom body color
                 return res.status(400).send("'bodyColor' must be specified and a valid hex when using the specialitem-1 body.");
             }
