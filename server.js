@@ -16,6 +16,7 @@ app.use(cors())
 app.use("*", require("./modules/CheckAuth"));
 
 app.get("/asset/specialitem-1/:hex", (req, res) => {
+  if (!/^#([0-9a-f]{3}){1,2}$/i.test('#' + req.params.hex)) return res.send("Invalid hex color")
   fs.readFile(path.join(__dirname, '/generator') + "/Body.svg", function read(err, data) {
     if (err) {
         throw err;
