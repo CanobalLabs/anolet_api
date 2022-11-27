@@ -13,8 +13,8 @@ var minio = require("../modules/Minio.js");
 
 const endpoints = {
     "site": "https://staging.anolet.com",
-    "email-verify": (process.env.ENVIRONMENT == "dev") ? "http://localhost/user/verify/" : "https://staging-api-infra.anolet.com/user/verify/",
-    "password-reset": (process.env.ENVIRONMENT == "dev") ? "http://localhost/user/verify/" : "https://staging-api-infra.anolet.com/user/verify/",
+    "email-verify": (process.env.ENVIRONMENT == "dev") ? "http://localhost/user/verify/" : "https://api-staging.anolet.com/user/verify/",
+    "password-reset": (process.env.ENVIRONMENT == "dev") ? "http://localhost/user/verify/" : "https://api-staging.anolet.com/user/verify/",
 }
 router.route("/me").get((req, res) => {
     if (!res.locals.id) return res.send("Unauthorized");
@@ -189,7 +189,7 @@ router.route("/me/avatar").post(validate(avatarValidation, {}, {}), (req, res) =
                 var cdn = "https://cdn.anolet.com"
                 // and now render it...
                 mergeImages([
-                    req.body?.bodyColor ? `https://staging-api-infra.anolet.com/asset/specialitem-1/${req.body.bodyColor}`: `${cdn}/items/${req.body.bodies[0]}/internal.png`,
+                    req.body?.bodyColor ? `https://api-staging.anolet.com/asset/specialitem-1/${req.body.bodyColor}`: `${cdn}/items/${req.body.bodies[0]}/internal.png`,
                     { src: `${cdn}/items/${req.body.faces[0]}/internal.png`, y: req.body.faceOffset || 20 },
                     req.body.shoes[0] ? `${cdn}/items/${req.body.shoes[0]}/internal.png` : `${cdn}/templates/blank.png`,
                     req.body.accessories[0] ? `${cdn}/items/${req.body.accessories[0]}/internal.png` : `${cdn}/templates/blank.png`,
