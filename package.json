@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "startwdoppler": "doppler run -- node server.js",
+    "dev": "doppler run -- nodemon server.js"
   },
   "engines": {
     "node": "17.1.0"
