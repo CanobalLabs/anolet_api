@@ -126,7 +126,7 @@ router.route("/:itemId").get((req, res) => {
         res.json(item);
     });
 }).patch(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), validate(validationEdit, {}, {}), (req, res) => {
-    Item.findOne({ id: req.params.itemId }, "available assetUploaded").then(resp => {
+    Item.findOne({ id: req.params.itemId }, "available assetUploaded manager").then(resp => {
         if (!resp) res.status(404).send()
         if (resp.manager == res.locals.id) {
             if (resp.available && (req.body.type || req.body.available)) return res.status(400).send("You cannot change item type or availability after an item has been released");
