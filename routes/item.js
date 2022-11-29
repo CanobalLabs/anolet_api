@@ -20,6 +20,7 @@ router.route("/").post(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), validate(vali
         manager: res.locals.id,
         type: req.body.type,
         price: 0,
+        sales: 0,
         saleEnd: '2001-01-01T05:00:00.000Z',
         salePrice: 0,
         assetUploaded: false,
