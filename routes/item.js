@@ -146,7 +146,7 @@ router.route("/:itemId").get((req, res) => {
             res.status(400).send()
         }
     });
-});.delete(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), (req, res) => {
+}).delete(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), (req, res) => {
     Item.findOne({ id: req.params.itemId }, "available assetUploaded").then(resp => {
         if (!resp) res.status(404).send()
         if (resp.manager == res.locals.id && resp.available == false) {
