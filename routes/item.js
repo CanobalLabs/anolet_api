@@ -131,7 +131,11 @@ router.route("/:itemId").get((req, res) => {
         if (resp.manager == res.locals.id) {
             if (resp.available && (req.body.type || req.body.available)) return res.status(400).send("You cannot change item type or availability after an item has been released");
             if (req.body.available == true && !resp.assetUploaded) return res.status(400).send("Item image must be uploaded before publishing.");
+            if (!res.locals.permissions.includes("UPLOAD_ANOLET") && req.body?.anoletAccount) return res.status(403).send("You can't publish to the Anolet account");
+            if (!res.locals.permissions.includes("UPLOAD_SELF") && !req.body?.anoletAccount) return res.status(403).send("You can't publish as yourself");
+
             Item.updateOne({ id: req.params.itemId }, {
+                owner: req.body?.anoletAccount ? "anolet" : res.locals.id,
                 name: req.body.name,
                 description: req.body.description,
                 type: req.body.type,
