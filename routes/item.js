@@ -124,6 +124,7 @@ router.route("/:itemId/purchase").post((req, res) => {
 router.route("/:itemId").get((req, res) => {
     Item.findOne({ "id": req.params.itemId }).then(item => {
         if (item == null) return res.status(404).send();
+        if (!item.available && item.manager != res.locals?.id) return res.status(400).send();
         res.json(item);
     });
 }).patch(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), validate(validationEdit, {}, {}), (req, res) => {
