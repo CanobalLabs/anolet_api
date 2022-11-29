@@ -128,10 +128,10 @@ router.route("/:itemId").get((req, res) => {
         res.json(item);
     });
 }).patch(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), validate(validationEdit, {}, {}), (req, res) => {
-    Item.findOne({ id: req.params.itemId }, "available assetUploaded manager").then(resp => {
+    Item.findOne({ id: req.params.itemId }, "available assetUploaded manager type").then(resp => {
         if (!resp) res.status(404).send()
         if (resp.manager == res.locals.id) {
-            if (resp.available && (req.body.type || req.body.available)) return res.status(400).send("You cannot change item type or availability after an item has been released");
+            if (resp.available && req.body.available == false) return res.status(400).send("You cannot change item type or availability after an item has been released");
             if (req.body.available == true && !resp.assetUploaded) return res.status(400).send("Item image must be uploaded before publishing.");
             if (!res.locals.permissions.includes("UPLOAD_ANOLET") && req.body?.anoletAccount == true) return res.status(403).send("You can't publish to the Anolet account");
             if (!res.locals.permissions.includes("UPLOAD_SELF") && req.body?.anoletAccount == false) return res.status(403).send("You can't publish as yourself");
