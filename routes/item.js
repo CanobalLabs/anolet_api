@@ -42,9 +42,9 @@ router.route("/s").get(async (req, res) => {
     var dbresp = Item.find(query, search ? { score: { $meta: "textScore" } } : undefined);
 
     if (search) {
-        dbresp.sort({ score: { $meta: "textScore" } }).exec((err, docs) => { res.json(docs) });
+        dbresp.sort({ score: { $meta: "textScore" } }, {_id: -1 }).exec((err, docs) => { res.json(docs) });
     } else {
-        dbresp.exec((err, docs) => { res.json(docs) });
+        dbresp.sort({_id:-1}).exec((err, docs) => { res.json(docs) });
     }
 
 });
@@ -98,8 +98,9 @@ router.route("/:itemId/upload").post(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"),
 });
 
 router.route("/:itemId/purchase").post((req, res) => {
-    Item.findOne({ "id": req.params.itemId }).then(item => {
+    Item.findOne({ "id": req.params.itemId }, "price saleEnd salePrice available").then(item => {
         if (item == null) return res.status(400).send("That item doesn't exist.");
+        if (item.available == false) return res.status(400).send("Item is not available");
         var price = null;
         if (new Date(item.saleEnd) >= new Date()) {
             // item is on sale
@@ -110,7 +111,7 @@ router.route("/:itemId/purchase").post((req, res) => {
                 // they can buy
                 User.updateOne({ id: item.owner }, { $inc: { amulets: price } }).then(() => {
                     User.updateOne({ id: res.locals.id }, { $push: { belongings: item.id }, $inc: { amulets: -price } }).then(() => {
-                        Item.updateOne({ id: item.id }, { $inc: { sales: 1 } }).then(() => {
+                        Item.updateOne({ id: req.params.itemId }, { $inc: { sales: 1 } }).then(() => {
                             res.send("Purchase Successful")
                         });
                     });
