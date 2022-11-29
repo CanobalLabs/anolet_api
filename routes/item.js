@@ -12,7 +12,8 @@ const { v4: uuidv4 } = require('uuid');
 
 router.route("/").post(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), validate(validation, {}, {}), (req, res) => {
     var genid = uuidv4()
-    if (res.locals.permissions.includes("UPLOAD_ANOLET") && req.body?.anoletAccount) return res.status(403).send("You can't upload to the Anolet account");
+    if (!res.locals.permissions.includes("UPLOAD_ANOLET") && req.body?.anoletAccount) return res.status(403).send("You can't publish to the Anolet account");
+    if (!res.locals.permissions.includes("UPLOAD_SELF") && !req.body?.anoletAccount) return res.status(403).send("You can't publish as yourself");
     new Item({
         name: req.body.name,
         description: req.body.description,
