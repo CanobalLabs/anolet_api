@@ -17,7 +17,7 @@ router.route("/").post(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), validate(vali
         name: req.body.name,
         description: req.body.description,
         owner: req.body?.anoletAccount ? "anolet" : res.locals.id,
-        manager: req.locals.id,
+        manager: res.locals.id,
         type: req.body.type,
         price: 0,
         saleEnd: '2001-01-01T05:00:00.000Z',
