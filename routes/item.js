@@ -122,15 +122,16 @@ router.route("/:itemId/purchase").post((req, res) => {
 
 router.route("/:itemId").get((req, res) => {
     Item.findOne({ "id": req.params.itemId }).then(item => {
-        if (item == null) return res.status(404).send()
+        if (item == null) return res.status(404).send();
         res.json(item);
     });
-}).patch(Permission("SHOP"), validate(validationEdit, {}, {}), (req, res) => {
+}).patch(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), validate(validationEdit, {}, {}), (req, res) => {
     Item.findOne({ id: req.params.itemId }, "available assetUploaded").then(resp => {
-        if (resp && resp.manager == res.locals.id) {
+        if (!resp) res.status(404).send()
+        if (resp.manager == res.locals.id) {
             if (resp.available && (req.body.type || req.body.available)) return res.status(400).send("You cannot change item type or availability after an item has been released");
             if (req.body.available == true && !resp.assetUploaded) return res.status(400).send("Item image must be uploaded before publishing.");
-            Item.findOneAndUpdate({ id: req.params.itemId }, {
+            Item.updateOne({ id: req.params.itemId }, {
                 name: req.body.name,
                 description: req.body.description,
                 type: req.body.type,
@@ -138,11 +139,22 @@ router.route("/:itemId").get((req, res) => {
                 available: req.body.available,
                 saleEnd: req.body.saleEnd,
                 salePrice: req.body.salePrice
-            }, { new: true }).then(resp => {
+            }).then(resp => {
                 res.send()
             });
         } else {
             res.status(400).send()
+        }
+    });
+});.delete(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), (req, res) => {
+    Item.findOne({ id: req.params.itemId }, "available assetUploaded").then(resp => {
+        if (!resp) res.status(404).send()
+        if (resp.manager == res.locals.id && resp.available == false) {
+            Item.deleteOne({ id: req.params.itemId }).then(resp => {
+                res.send()
+            });
+        } else {
+            res.status(400).send("You cannot delete an item after it has been released.")
         }
     });
 });
