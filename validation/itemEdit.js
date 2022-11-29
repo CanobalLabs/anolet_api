@@ -9,5 +9,6 @@ module.exports = {
     available: Joi.boolean(),
     saleEnd: Joi.date(),
     salePrice: Joi.number().min(0),
+    anoletAccount: Joi.boolean()
   }),
 }
