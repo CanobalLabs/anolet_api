@@ -5,10 +5,10 @@ module.exports = {
     name: Joi.string().min(1).max(255),
     description: Joi.string().min(1).max(255),
     type: Joi.string().valid('accessory', 'face', 'body', 'shoes'),
-    price: Joi.number().min(0),
+    price: Joi.number().integer().min(0),
     available: Joi.boolean(),
     saleEnd: Joi.date(),
-    salePrice: Joi.number().min(0),
+    salePrice: Joi.number().integer().min(0),
     anoletAccount: Joi.boolean()
   }),
 }
