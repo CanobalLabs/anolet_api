@@ -153,6 +153,9 @@ router.route("/:itemId").get((req, res) => {
             Item.deleteOne({ id: req.params.itemId }).then(resp => {
                 res.send()
             });
+            if (item.assetUploaded) {
+                minio.removeObjects('anolet', [`items/${req.params.itemId}/preview.png`, `items/${req.params.itemId}/internal.png`], () => {});
+            }
         } else {
             res.status(400).send("You cannot delete an item after it has been released.")
         }
