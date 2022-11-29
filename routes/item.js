@@ -19,8 +19,8 @@ router.route("/").post(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), validate(vali
         owner: req.body?.anoletAccount ? "anolet" : res.locals.id,
         manager: req.locals.id,
         type: req.body.type,
-        price: req.body.price,
-        saleEnd: '1',
+        price: 0,
+        saleEnd: '2001-01-01T05:00:00.000Z',
         salePrice: 0,
         assetUploaded: false,
         available: false,
@@ -124,9 +124,10 @@ router.route("/:itemId").get((req, res) => {
         res.json(item);
     });
 }).patch(Permission("SHOP"), validate(validationEdit, {}, {}), (req, res) => {
-    Item.findOne({ id: req.params.itemId }, "available").then(resp => {
+    Item.findOne({ id: req.params.itemId }, "available assetUploaded").then(resp => {
         if (resp && resp.manager == res.locals.id) {
             if (resp.available && (req.body.type || req.body.available)) return res.status(400).send("You cannot change item type or availability after an item has been released");
+            if (req.body.available == true && !resp.assetUploaded) return res.status(400).send("Item image must be uploaded before publishing.");
             Item.findOneAndUpdate({ id: req.params.itemId }, {
                 name: req.body.name,
                 description: req.body.description,
