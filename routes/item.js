@@ -107,10 +107,10 @@ router.route("/:itemId/purchase").post((req, res) => {
             price = item.salePrice
         } else price = item.price;
         User.findOne({ "id": res.locals.id }).then(usr => {
-            if (!(price > usr.amulets) && !usr.belongings.includes(item.id)) {
+            if (!(price > usr.amulets) && !usr.belongings.includes(req.params.itemId)) {
                 // they can buy
                 User.updateOne({ id: item.owner }, { $inc: { amulets: price } }).then(() => {
-                    User.updateOne({ id: res.locals.id }, { $push: { belongings: item.id }, $inc: { amulets: -price } }).then(() => {
+                    User.updateOne({ id: res.locals.id }, { $push: { belongings: req.params.itemId }, $inc: { amulets: -price } }).then(() => {
                         Item.updateOne({ id: req.params.itemId }, { $inc: { sales: 1 } }).then(() => {
                             res.send("Purchase Successful")
                         });
