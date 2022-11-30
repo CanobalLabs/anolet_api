@@ -165,12 +165,12 @@ router.route("/me/avatar").post(validate(avatarValidation, {}, {}), (req, res) =
             if (!usr.belongings.includes(item)) {
                 return res.status(400).send("You do not own 1 or more of these items.");
             }
-            if (req.body.bodies[0] == "specialitem-1" && (!req.body?.bodyColor || !/^#([0-9a-f]{3}){1,2}$/i.test('#' + req.body.bodyColor))) {
+            if ((req.body.bodies[0] == "specialitem-1" || req.body.bodies[0] == "specialitem-2") && (!req.body?.bodyColor || !/^#([0-9a-f]{3}){1,2}$/i.test('#' + req.body.bodyColor))) {
                 // Invalid settings for custom body color
-                return res.status(400).send("'bodyColor' must be specified and a valid hex when using the specialitem-1 body.");
+                return res.status(400).send("'bodyColor' must be specified and a valid hex when using the specialitem-1/2 body.");
             }
-            if (req.body.bodies[0] != "specialitem-1" && req.body?.bodyColor) {
-                return res.status(400).send("'bodyColor' can only be used with the specialitem-1 body.");
+            if (req.body.bodies[0] != "specialitem-1" && req.body.bodies[0] != "specialitem-2" && req.body?.bodyColor) {
+                return res.status(400).send("'bodyColor' can only be used with the specialitem-1/2 body.");
             }
             if (index + 1 == chosenitems.length) {
                 res.setHeader("content-type", "image/png");
@@ -189,7 +189,7 @@ router.route("/me/avatar").post(validate(avatarValidation, {}, {}), (req, res) =
                 var cdn = "https://cdn.anolet.com"
                 // and now render it...
                 mergeImages([
-                    req.body?.bodyColor ? `https://api-staging.anolet.com/asset/specialitem-1/${req.body.bodyColor}`: `${cdn}/items/${req.body.bodies[0]}/internal.png`,
+                    req.body?.bodyColor ? `https://api-staging.anolet.com/asset/${req.body.bodies[0]}/${req.body.bodyColor}`: `${cdn}/items/${req.body.bodies[0]}/internal.png`,
                     { src: `${cdn}/items/${req.body.faces[0]}/internal.png`, y: req.body.faceOffset || 20 },
                     req.body.shoes[0] ? `${cdn}/items/${req.body.shoes[0]}/internal.png` : `${cdn}/templates/blank.png`,
                     req.body.accessories[0] ? `${cdn}/items/${req.body.accessories[0]}/internal.png` : `${cdn}/templates/blank.png`,

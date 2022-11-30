@@ -27,6 +27,18 @@ app.get("/asset/specialitem-1/:hex", (req, res) => {
   });
 });
 
+app.get("/asset/specialitem-2/:hex", (req, res) => {
+  if (!/^#([0-9a-f]{3}){1,2}$/i.test('#' + req.params.hex)) return res.send("Invalid hex color")
+  fs.readFile(path.join(__dirname, '/generator') + "/si2.svg", function read(err, data) {
+    if (err) {
+        throw err;
+    }
+  
+    res.setHeader("Content-Type", "image/svg+xml");
+    res.send(data.toString().replace("<$bodyColor$>", "#" + req.params.hex));
+  });
+});
+
 app.use(function(req, res, next) {
   res.removeHeader("x-powered-by");
   res.setHeader('x-platform', process.platform)
