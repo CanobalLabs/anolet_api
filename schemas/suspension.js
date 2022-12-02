@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const suspensionSchema = mongoose.Schema({
-    id: String,
     type: String,
     source: String,
     sourceName: String,
