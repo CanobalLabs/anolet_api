@@ -136,6 +136,7 @@ router.route("/:itemId").get((req, res) => {
             if (!res.locals.permissions.includes("UPLOAD_ANOLET") && req.body?.anoletAccount == true) return res.status(403).send("You can't publish to the Anolet account");
             if (!res.locals.permissions.includes("UPLOAD_SELF") && req.body?.anoletAccount == false) return res.status(403).send("You can't publish as yourself");
 
+            if (req.body.available) User.updateOne({ id: res.locals.id }, { $push: { belongings: req.params.itemId }}).then(() => {});
             Item.updateOne({ id: req.params.itemId }, {
                 owner: req.body?.anoletAccount ? "anolet" : res.locals.id,
                 name: req.body.name,
