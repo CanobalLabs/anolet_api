@@ -41,6 +41,7 @@ const userSchema = new Schema({
         type: Boolean,
         required: false
     },
+    suspensions: [require("../schemas/belongings")]
 });
 
 userSchema.index({username: 'text'});

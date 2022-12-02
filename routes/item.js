@@ -128,7 +128,7 @@ router.route("/:itemId").get((req, res) => {
         res.json(item);
     });
 }).patch(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), validate(validationEdit, {}, {}), (req, res) => {
-    Item.findOne({ id: req.params.itemId }, "available assetUploaded manager type").then(resp => {
+    Item.findOne({ id: req.params.itemId }, "available assetUploaded manager type created").then(resp => {
         if (!resp) res.status(404).send()
         if (resp.manager == res.locals.id) {
             if (resp.available && req.body.available == false) return res.status(400).send("You cannot change item type or availability after an item has been released");
@@ -143,9 +143,10 @@ router.route("/:itemId").get((req, res) => {
                 type: req.body.type,
                 price: req.body.price,
                 available: req.body.available,
+                created: req.body.available ? new Date.now() : resp.created,
                 saleEnd: req.body.saleEnd,
                 salePrice: req.body.salePrice
-            }).then(resp => {
+            }).then(() => {
                 res.send()
             });
         } else {
