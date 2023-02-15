@@ -17,6 +17,25 @@ const endpoints = {
     "email-verify": (process.env.ENVIRONMENT == "dev") ? "http://localhost/user/verify/" : "https://api-staging.anolet.com/user/verify/",
     "password-reset": (process.env.ENVIRONMENT == "dev") ? "http://localhost/user/verify/" : "https://api-staging.anolet.com/user/verify/",
 }
+
+router.route("/s").get(async (req, res) => {
+    // remember for frontend devs, pages start at 0 on the backend
+    var query = {};
+    var search = "";
+    var page = 0;
+    if (req.query.page) page = req.query.page
+
+    if (req.headers["x-anolet-search"]) { search = req.headers["x-anolet-search"]; query.$text = { $search: search }; }
+    var dbresp = Item.find(query, search ? { score: { $meta: "textScore" }, skip: 20 * page, limit: 20 } : undefined);
+
+    if (search) {
+        dbresp.sort({ score: { $meta: "textScore" } }, {_id: -1 }).exec((err, docs) => { res.json(docs) });
+    } else {
+        dbresp.sort({_id:-1}).exec((err, docs) => { res.json(docs) });
+    }
+
+});
+
 router.route("/me").get((req, res) => {
     if (!res.locals.id) return res.send("Unauthorized");
     User.findOne({ id: res.locals.id }).then(user => {
