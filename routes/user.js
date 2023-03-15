@@ -4,7 +4,7 @@ const User = require("../models/user.js");
 const { validate } = require('express-validation')
 const validation = require("../validation/user/edit.js");
 const avatarValidation = require("../validation/avatar.js");
-const checkUsername = reauire("../modules/CheckUsername.js")
+const checkUsername = require("../modules/CheckUsername.js")
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.MAIL);
 const jwt = require('jsonwebtoken');
