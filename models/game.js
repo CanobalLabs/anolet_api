@@ -71,6 +71,7 @@ const gameSchema = new Schema({
         id: Number,
         nickname: String,
         boundaryPolylines: [[[Number]]],
+        teleporters: [require("../schemas/teleporter")],
         layers: [{
             layer: Number,
             nickname: String,
