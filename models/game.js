@@ -72,6 +72,7 @@ const gameSchema = new Schema({
         nickname: String,
         boundaryPolylines: [[[Number]]],
         teleporters: [require("../schemas/teleporter")],
+        spawn: require("../schemas/coordinates"),
         layers: [{
             layer: Number,
             nickname: String,

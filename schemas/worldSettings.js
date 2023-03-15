@@ -13,7 +13,6 @@ const worldSettingsSchema = mongoose.Schema({
         type: Number,
         required: true,
     },
-    spawn: require("./coordinates.js"),
     avatarScale: Number,
 });
 
