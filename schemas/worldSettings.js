@@ -10,7 +10,7 @@ const worldSettingsSchema = mongoose.Schema({
         required: true,
     },
     defaultZone: {
-        type: Number,
+        type: String,
         required: true,
     },
     avatarScale: Number,

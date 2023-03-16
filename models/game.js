@@ -68,13 +68,13 @@ const gameSchema = new Schema({
     creator: require("../schemas/creator"),
     worldSettings: require("../schemas/worldSettings"),
     zones: [{
-        id: Number,
+        id: String,
         nickname: String,
         boundaryPolylines: [[[Number]]],
         teleporters: [require("../schemas/teleporter")],
         spawn: require("../schemas/coordinates"),
         layers: [{
-            layer: Number,
+            layer: String,
             nickname: String,
             assetURL: String
         }]
