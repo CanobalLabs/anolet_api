@@ -6,7 +6,7 @@ const teleporterSchema = mongoose.Schema({
         required: true,
     },
     toZone: {
-        type: Number,
+        type: String,
         required: true,
     },
     locationPolyline: [[]]
