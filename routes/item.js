@@ -144,7 +144,7 @@ router.route("/:itemId").get((req, res) => {
                 type: req.body.type,
                 price: req.body.price,
                 available: req.body.available,
-                created: req.body.available ? new Date.now() : resp.created,
+                created: req.body.available ? new Date() : resp.created,
                 saleEnd: req.body.saleEnd,
                 salePrice: req.body.salePrice
             }).then(() => {
