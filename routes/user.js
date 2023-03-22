@@ -256,7 +256,7 @@ router.route("/:userId/permissions").get((req, res) => {
 
 router.route("/:userId/avatar/:type").get((req, res) => {
     if (req.params.type != "internal" && req.params.type != "preview") return res.status(400).send("Invalid type");
-    if (req.params.userId.split("_")[0] == "player") return res.redirect("https://cdn.anolet.com/avatars/anolet/preview.png")
+    if (req.params.userId.split("_")[0] == "player") return res.redirect("https://cdn.anolet.com/avatars/anolet/" + req.params.type + ".png")
     User.findOne({ "id": req.params.userId }, "defaultRender").then(user => {
         if (user == null) return res.status(404).send()
         if (user.defaultRender) {
