@@ -12,6 +12,13 @@ router.route("/s").get((req, res) => {
     });
 });
 
+router.route("/:gameId/cacheableAssets").get((req, res) => {
+    Game.findOne({ "id": req.params.gameId }).then(game => {
+        // Returns all assetURLs, add game privacy check soon
+        res.json(game.zones.map(zone => zone.layers.map(layer => layer.assetURL)));
+    });
+});
+
 router.route("/:gameId").get((req, res) => {
     Game.findOne({ "id": req.params.gameId }).then(game => {
         if (game == null) return res.status(404).send()
