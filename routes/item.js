@@ -2,6 +2,7 @@ const express = require('express');
 let router = express.Router();
 const Item = require("../models/item.js");
 const User = require("../models/user.js");
+const Transaction = require("../models/transaction.js");
 const Permission = require("../middleware/Permission.js");
 var minio = require("../modules/Minio.js");
 var bodyParser = require('body-parser');
@@ -112,7 +113,15 @@ router.route("/:itemId/purchase").post((req, res) => {
                 User.updateOne({ id: item.owner }, { $inc: { amulets: price } }).then(() => {
                     User.updateOne({ id: res.locals.id }, { $push: { belongings: req.params.itemId }, $inc: { amulets: -price } }).then(() => {
                         Item.updateOne({ id: req.params.itemId }, { $inc: { sales: 1 } }).then(() => {
-                            res.send("Purchase Successful")
+                             new Transaction({
+                                asset: req.params.itemId,
+                                assetType: "store",
+                                date: new Date(),
+                                amulets: price,
+                                increaseParty: item.owner,
+                                decreaseParty: res.locals.id
+                             }).save();
+                            res.send("Purchase Successful");
                         });
                     });
                 });
