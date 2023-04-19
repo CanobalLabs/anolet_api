@@ -4,6 +4,14 @@ const Schema = mongoose.Schema;
 const transactionSchema = new Schema({
    asset: String,
    assetType: String,
+   status: {
+        type: String,
+        enum : [
+                  'success',
+                  'refunded'
+               ],
+        default: 'success'
+   },
    date: Date,
    amulets: Number,
    increaseParty: String,
