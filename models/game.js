@@ -70,7 +70,8 @@ const gameSchema = new Schema({
     zones: [{
         id: String,
         nickname: String,
-        boundaryPolylines: [[[Number]]],
+        boundaryPolylines: [[[Number]]], // To be deprecated
+        boundaries: [require("../schemas/boundary")],
         teleporters: [require("../schemas/teleporter")],
         spawn: require("../schemas/coordinates"),
         layers: [{
