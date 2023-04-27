@@ -5,11 +5,15 @@ const teleporterSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    nickname: {
+        type: String,
+        required: true,
+    },
     toZone: {
         type: String,
         required: true,
     },
-    locationPolyline: [[]]
+    area: [[Number,Number]]
 });
 
 module.exports = teleporterSchema;
