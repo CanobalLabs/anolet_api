@@ -13,7 +13,7 @@ const teleporterSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    area: [[Number,Number]]
+    region: [[Number,Number]]
 });
 
 module.exports = teleporterSchema;
