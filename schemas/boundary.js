@@ -10,5 +10,5 @@ module.exports = mongoose.Schema({
         required: true,
     },
     barrier: Boolean,
-    region: [[]]
+    region: [[Number,Number]]
 });
