@@ -108,16 +108,16 @@ router.route("/:itemId/purchase").post((req, res) => {
             price = item.salePrice
         } else price = item.price;
         User.findOne({ "id": res.locals.id }).then(usr => {
-            if (!(price > usr.amulets) && !usr.belongings.includes(req.params.itemId)) {
+            if (!(price > usr.gems) && !usr.belongings.includes(req.params.itemId)) {
                 // they can buy
-                User.updateOne({ id: item.owner }, { $inc: { amulets: price } }).then(() => {
-                    User.updateOne({ id: res.locals.id }, { $push: { belongings: req.params.itemId }, $inc: { amulets: -price } }).then(() => {
+                User.updateOne({ id: item.owner }, { $inc: { gems: price } }).then(() => {
+                    User.updateOne({ id: res.locals.id }, { $push: { belongings: req.params.itemId }, $inc: { gems: -price } }).then(() => {
                         Item.updateOne({ id: req.params.itemId }, { $inc: { sales: 1 } }).then(() => {
                              new Transaction({
                                 asset: req.params.itemId,
                                 assetType: "store",
                                 date: new Date(),
-                                amulets: price,
+                                gems: price,
                                 increaseParty: item.owner,
                                 decreaseParty: res.locals.id
                              }).save();

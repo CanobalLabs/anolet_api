@@ -22,7 +22,7 @@ router.post("/signup", validate(validation, {}, {}), async (req, res) => {
             defaultRender: true,
             created: new Date(),
             username: req.body.username,
-            password: hash, amulets: 500,
+            password: hash, gems: 500,
             about: "I don't have a bio, but I can change that!",
             belongings: [
                 "a05b72b1-15b2-4d4a-b45e-1d1a9488bd4d",

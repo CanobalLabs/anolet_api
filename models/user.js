@@ -25,7 +25,7 @@ const userSchema = new Schema({
         required: true,
     },
     ranks: [String],
-    amulets: {
+    gems: {
         type: Number,
         required: true,
     },

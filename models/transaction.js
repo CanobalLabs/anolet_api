@@ -13,7 +13,7 @@ const transactionSchema = new Schema({
         default: 'success'
    },
    date: Date,
-   amulets: Number,
+   gems: Number,
    increaseParty: String,
    decreaseParty: String
 });
