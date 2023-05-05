@@ -99,7 +99,7 @@ router.route("/:itemId/upload").post(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"),
 });
 
 router.route("/:itemId/purchase").post((req, res) => {
-    Item.findOne({ "id": req.params.itemId }, "price saleEnd salePrice available").then(item => {
+    Item.findOne({ "id": req.params.itemId }, "price saleEnd salePrice available owner").then(item => {
         if (item == null) return res.status(400).send("That item doesn't exist.");
         if (item.available == false) return res.status(400).send("Item is not available");
         var price = null;
