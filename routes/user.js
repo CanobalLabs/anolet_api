@@ -199,9 +199,8 @@ router.route("/me/avatar").post(validate(avatarValidation, {}, {}), (req, res) =
                     },
                     bodyColor: req.body?.bodyColor || undefined,
                     defaultRender: false
-                });
-
-                var cdn = "https://cdn.anolet.com"
+                }).then(() => {
+					var cdn = "https://cdn.anolet.com"
                 // and now render it...
                 mergeImages([
                     req.body?.bodyColor ? `https://api-staging.anolet.com/asset/${req.body.bodies[0]}/${req.body.bodyColor}`: `${cdn}/items/${req.body.bodies[0]}/internal.png`,
@@ -241,6 +240,7 @@ router.route("/me/avatar").post(validate(avatarValidation, {}, {}), (req, res) =
                             });
                         });
                     });
+				}).catch(error => console.log(error))
             }
         });
     });
