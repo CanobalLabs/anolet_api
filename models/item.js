@@ -2,11 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const itemSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    description: {
+    id: {
         type: String,
         required: true,
     },
@@ -18,40 +14,60 @@ const itemSchema = new Schema({
         type: String,
         required: true,
     },
-    type: {
-        type: String,
-        required: true,
-    },
-    assetUploaded: {
-        type: Boolean,
-        required: true
-    },
-    price: {
-        type: Number,
-        required: true,
-    },
-    saleEnd: {
-        type: Date,
-        required: true,
-    },
     created: {
         type: Date,
         required: true
     },
-    salePrice: {
-        type: Number,
-        required: true
+
+    name: {
+        type: String,
+        default: "Untitled Item",
     },
-    available: {
-        type: Boolean,
+    description: String,
+    type: {
+        type: String,
+        enum: ["accessory", "body", "face", "shoes"]
+    },
+    purchaseType: {
+        type: String,
+        enum: ["seperate", "included"],  // seperate: you must buy each variant seperately (different variants can have different prices), included: you buy the item for one price and get all variants 
+    },
+    price: Number, // only if purchaseType = included
+    variants: [{
+        id: {
+            type: String,
+            required: true,
+        },
+        name: {
+            type: String,
+            default: "Untitled Variant"
+        },
+        color: String,
+        price: Number, // only if purchaseType = seperate
+        assetUploaded: {
+            type: Boolean,
+            default: false
+        }
+    }],
+    sales: [{
+        name: {
+            type: String,
+            default: "Untitled Sale"
+        },
+        discount: { // percentage
+            type: Number,
+            default: 0
+        },
+        begin: Date,
+        end: Date,
+        variants: Array
+    }],
+    releaseDate: {
+        type: Date,
         required: true,
     },
     sales: {
         type: Number,
-        required: true,
-    },
-    id: {
-        type: String,
         required: true,
     },
 });
