@@ -15,6 +15,10 @@ const modelSchema = new Schema({
         required: true,
         enum: ["email", "phone"]
     },
+    auth: {
+        type: String,
+        required: true,
+    },
     authVerified: {
         type: Boolean,
         required: true,
