@@ -50,17 +50,27 @@ const itemSchema = new Schema({
         }
     }],
     sales: [{
+        id: {
+            type: String,
+            required: true,
+        },
         name: {
             type: String,
             default: "Untitled Sale"
         },
-        discount: { // percentage
-            type: Number,
-            default: 0
-        },
+        description: String,
         begin: Date,
         end: Date,
-        variants: Array
+        variants: [{
+            variant: {
+                type: String,
+                required: true,
+            },
+            discount: { // percentage
+                type: Number,
+                default: 0
+            },
+        }]
     }],
     releaseDate: {
         type: Date,
