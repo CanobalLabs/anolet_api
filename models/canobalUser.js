@@ -21,25 +21,44 @@ const modelSchema = new Schema({
     },
     authVerified: {
         type: Boolean,
-        required: true,
         default: false
     },
-    registeredPlatforms: {
+    registeredVendors: [{
         type: String,
-        required: true,
-        enum: ["anolet", "questionhouse"]
+        enum: ["anolet", "question_house"],
+        default: []
+    }],
+    lastLogin: {
+        type: Date,
+        default: null
     },
-    lastLogin: Date,
+    loginCode: {
+        type: Number,
+        default: ""
+    },
+    loginVendor: {
+        type: String,
+        enum: ["anolet", "question_house", ""],
+        default: ""
+    },
   
   
-    pfp: String,
-    username: String,
+    pfp: {
+        type: String,
+        default: "default"
+    },
+    username: {
+        type: String,
+        default: null
+    },
     gems: {
         type: Number,
-        required: true,
-        default: 0
+        default: 500
     },
-    about: String,
+    about: {
+        type: String,
+        default: ""
+    },
 });
 
 modelSchema.index({username: 'text'});

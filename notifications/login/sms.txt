@@ -1,0 +1,1 @@
+Your verification code to login to ${vendor.name} is ${code}.

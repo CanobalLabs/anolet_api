@@ -1,5 +1,14 @@
 [
     {
+        "id": "MODERATOR",
+        "permissions": [
+            "USER_SUSPENSIONS",
+            "DELETE_OTHERS_SUSPENSIONS",
+            "READ_USER_AUTH",
+            "EDIT_AVATARS"
+        ]
+    },
+    {
         "id": "UGC",
         "permissions": [
             "UPLOAD_SELF"
