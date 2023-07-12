@@ -5,7 +5,9 @@
             "USER_SUSPENSIONS",
             "DELETE_OTHERS_SUSPENSIONS",
             "READ_USER_AUTH",
-            "EDIT_AVATARS"
+            "EDIT_AVATARS",
+            "MODIFY_USER",
+            "SET_USER_AVATAR"
         ]
     },
     {

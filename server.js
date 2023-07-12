@@ -48,14 +48,14 @@ app.use(function(req, res, next) {
 
 // Import Routes
 const UserRoute = require("./routes/user/index.js");
-const LoginRoute = require("./routes/login.js");
+const CanobalLabsRoute = require("./routes/canobalLabs/index.js");
 const GameRoute = require("./routes/game.js");
 const ItemRoute = require("./routes/item.js");
 const ACCService = require("./routes/ACCService.js");
 
 // Use Routes
-app.use("/login", LoginRoute);
 app.use("/user", UserRoute);
+app.use("/canobalLabs", CanobalLabsRoute);
 app.use("/game", GameRoute);
 app.use("/item", ItemRoute);
 app.use("/ACCService", ACCService);

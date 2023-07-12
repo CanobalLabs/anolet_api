@@ -1,4 +1,4 @@
-const User = require("../models/user.js");
+const User = require("../models/canobalUser.js");
 
 async function checkUsername(username) {
     return User.findOne({ "username": { $regex: new RegExp(username, "i") } }, "id").then(response => {
