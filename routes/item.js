@@ -2,16 +2,19 @@ const express = require('express');
 let router = express.Router();
 const Item = require("../models/item.js");
 const User = require("../models/user.js");
+const CanobalUser = require("../models/canobalUser.js");
 const Transaction = require("../models/transaction.js");
-const Permission = require("../middleware/Permission.js");
 var minio = require("../modules/Minio.js");
 var bodyParser = require('body-parser');
 const { validate } = require('express-validation')
 const validation = require("../validation/item.js");
 const validationEdit = require("../validation/itemEdit.js");
 const { v4: uuidv4 } = require('uuid');
+const CalculatePermissions = require("../modules/CalculatePermissions.js");
 
-router.route("/").post(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), validate(validation, {}, {}), (req, res) => {
+router.route("/").post(validate(validation, {}, {}), async (req, res) => {
+    if (!res.locals.id) return res.status(401).send();
+    if (!(await CalculatePermissions(res.locals.id)).includes("UPLOAD_ANOLET") && !(await CalculatePermissions(res.locals.id)).includes("UPLOAD_SELF")) return res.status(403).send();
     var genid = uuidv4()
     if (!res.locals.permissions.includes("UPLOAD_ANOLET") && req.body?.anoletAccount) return res.status(403).send("You can't publish to the Anolet account");
     if (!res.locals.permissions.includes("UPLOAD_SELF") && !req.body?.anoletAccount) return res.status(403).send("You can't publish as yourself");
@@ -55,11 +58,12 @@ const trimImage = require("trim-image");
 var fs = require('fs');
 const path = require('path');
 
-router.route("/:itemId/upload").post(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), bodyParser.raw({
+router.route("/:itemId/upload").post(bodyParser.raw({
     inflate: true,
     limit: '100mb',
     type: 'image/png'
-}), (req, res) => {
+}), async (req, res) => {
+    if (!(await CalculatePermissions(res.locals.id)).includes("UPLOAD_ANOLET") && !(await CalculatePermissions(res.locals.id)).includes("UPLOAD_SELF")) return res.status(403).send();
     Item.findOne({ id: req.params.itemId }, "manager available").then(async resp => {
         if (req.body == {}) return res.status(400).send("Invalid body");
         if (resp.manager != res.locals.id) return res.status(403).send("You don't manage this item.");
@@ -108,24 +112,28 @@ router.route("/:itemId/purchase").post((req, res) => {
             price = item.salePrice
         } else price = item.price;
         User.findOne({ "id": res.locals.id }).then(usr => {
-            if (!(price > usr.gems) && !usr.belongings.includes(req.params.itemId)) {
-                // they can buy
-                User.updateOne({ id: item.owner }, { $inc: { gems: price } }).then(() => {
-                    User.updateOne({ id: res.locals.id }, { $push: { belongings: req.params.itemId }, $inc: { gems: -price } }).then(() => {
-                        Item.updateOne({ id: req.params.itemId }, { $inc: { sales: 1 } }).then(() => {
-                             new Transaction({
-                                asset: req.params.itemId,
-                                assetType: "store",
-                                date: new Date(),
-                                gems: price,
-                                increaseParty: item.owner,
-                                decreaseParty: res.locals.id
-                             }).save();
-                            res.send("Purchase Successful");
+            CanobalUser.findOne({ "id": res.locals.id }).then(cbusr => {
+                if (!(price > cbusr.gems) && !usr.belongings.includes(req.params.itemId)) {
+                    // they can buy
+                    User.updateOne({ id: item.owner }, { $inc: { gems: price } }).then(() => {
+                        User.updateOne({ id: res.locals.id }, { $push: { belongings: req.params.itemId }}).then(() => {
+                            CanobalUser.updateOne({ id: res.locals.id }, { $inc: { gems: -price } }).then(() => {
+                                Item.updateOne({ id: req.params.itemId }, { $inc: { sales: 1 } }).then(() => {
+                                    new Transaction({
+                                       asset: req.params.itemId,
+                                       assetType: "store",
+                                       date: new Date(),
+                                       gems: price,
+                                       increaseParty: item.owner,
+                                       decreaseParty: res.locals.id
+                                    }).save();
+                                   res.send("Purchase Successful");
+                               });
+                            });
                         });
                     });
-                });
-            } else return res.status(400).send("Insufficient balance or you already own this item.")
+                } else return res.status(400).send("Insufficient balance or you already own this item.")
+            });
         });
     });
 })
@@ -136,7 +144,8 @@ router.route("/:itemId").get((req, res) => {
         if (!item.available && item.manager != res.locals?.id) return res.status(400).send();
         res.json(item);
     });
-}).patch(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), validate(validationEdit, {}, {}), (req, res) => {
+}).patch(validate(validationEdit, {}, {}), async (req, res) => {
+    if (!(await CalculatePermissions(res.locals.id)).includes("UPLOAD_ANOLET") && !(await CalculatePermissions(res.locals.id)).includes("UPLOAD_SELF")) return res.status(403).send();
     Item.findOne({ id: req.params.itemId }, "available assetUploaded manager type created").then(resp => {
         if (!resp) res.status(404).send()
         if (resp.manager == res.locals.id) {
@@ -163,7 +172,8 @@ router.route("/:itemId").get((req, res) => {
             res.status(400).send()
         }
     });
-}).delete(Permission("UPLOAD_SELF", "UPLOAD_ANOLET"), (req, res) => {
+}).delete(async (req, res) => {
+    if (!(await CalculatePermissions(res.locals.id)).includes("UPLOAD_ANOLET") && !(await CalculatePermissions(res.locals.id)).includes("UPLOAD_SELF")) return res.status(403).send();
     Item.findOne({ id: req.params.itemId }, "available assetUploaded").then(resp => {
         if (!resp) res.status(404).send()
         if (resp.manager == res.locals.id && resp.available == false) {
