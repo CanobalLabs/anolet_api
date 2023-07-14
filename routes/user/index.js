@@ -33,6 +33,32 @@ router.route("/s").get(async (req, res) => {
 
 router.route("/:userId").get(async (req, res) => {
     console.log(res.locals.id)
+    if (req.params.userId.startsWith("player_")) {
+        res.json({
+            "id": req.params.userId,
+            "__v": 0,
+            "avatar": {
+                "accessories": [
+                    "a05b72b1-15b2-4d4a-b45e-1d1a9488bd4d"
+                ],
+                "bodies": [
+                    "3d62ac6b-b48f-43ac-a8bf-f43040e75111"
+                ],
+                "faces": [
+                    "0aff884e-112b-45dd-afd3-afa1ff3ec3c2"
+                ],
+                "shoes": [],
+                "_id": "64b0bf7698f8725dbd667850"
+            },
+            "belongings": [
+                "a05b72b1-15b2-4d4a-b45e-1d1a9488bd4d",
+                "3d62ac6b-b48f-43ac-a8bf-f43040e75111",
+                "0aff884e-112b-45dd-afd3-afa1ff3ec3c2",
+            ],
+            "defaultRender": false,
+            "username": "Player " + req.params.userId.split("_")[1],
+        });
+    }
     let user = await GetUser(req.params.userId == "me" ? res.locals.id : req.params.userId, "both")
     if (!user) return res.status(404).send()
     if (!(req.params.userId == "me" || req.params.userId == res.locals.id)) {
