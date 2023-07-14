@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/anolet/platform.git"
+    "url": "git+https://github.com/CanobalLabs/api.git"
   },
   "author": "Anolet LLC",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/anolet/platform/issues"
+    "url": "https://github.com/CanobalLabs/api/issues"
   },
-  "homepage": "https://github.com/anolet/platform#readme",
+  "homepage": "https://github.com/CanobalLabs/api#readme",
   "devDependencies": {
     "nodemon": "^2.0.16"
   },
