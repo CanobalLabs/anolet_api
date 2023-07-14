@@ -1,5 +1,5 @@
 const cryptr = require("./Cryptr.js")
-function checkauth(req, res, next) {
+function checkAuth(req, res, next) {
     if (!req.headers.authorization) {
         res.locals.id = 0;
     } else {
@@ -19,4 +19,4 @@ function checkauth(req, res, next) {
     }
     next();
 }
-module.exports = checkauth
+module.exports = checkAuth
