@@ -61,23 +61,22 @@ router.route("/").post(validate(avatarValidation, {}, {}), async (req, res) => {
                         defaultRender: undefined
                     }
                 }).then(() => {
-                    var cdn = "https://cdn.anolet.com"
                     // and now render it...
                     console.log("rendering")
                     mergeImages([
-                        req.body?.bodyColor ? `https://api-staging.anolet.com/asset/${req.body.bodies[0]}/${req.body.bodyColor}` : `${cdn}/items/${req.body.bodies[0]}/internal.png`,
-                        { src: `${cdn}/items/${req.body.faces[0]}/internal.png`, y: req.body.faceOffset || 20 },
-                        req.body.shoes[0] ? `${cdn}/items/${req.body.shoes[0]}/internal.png` : `${cdn}/templates/blank.png`,
-                        req.body.accessories[0] ? `${cdn}/items/${req.body.accessories[0]}/internal.png` : `${cdn}/templates/blank.png`,
-                        req.body.accessories[1] ? `${cdn}/items/${req.body.accessories[1]}/internal.png` : `${cdn}/templates/blank.png`,
-                        req.body.accessories[2] ? `${cdn}/items/${req.body.accessories[2]}/internal.png` : `${cdn}/templates/blank.png`,
+                        req.body?.bodyColor ? `https://api-staging.anolet.com/asset/${req.body.bodies[0]}/${req.body.bodyColor}` : `${process.env.CDNURL}/items/${req.body.bodies[0]}/internal.png`,
+                        { src: `${process.env.CDNURL}/items/${req.body.faces[0]}/internal.png`, y: req.body.faceOffset || 20 },
+                        req.body.shoes[0] ? `${process.env.CDNURL}/items/${req.body.shoes[0]}/internal.png` : `${process.env.CDNURL}/templates/blank.png`,
+                        req.body.accessories[0] ? `${process.env.CDNURL}/items/${req.body.accessories[0]}/internal.png` : `${process.env.CDNURL}/templates/blank.png`,
+                        req.body.accessories[1] ? `${process.env.CDNURL}/items/${req.body.accessories[1]}/internal.png` : `${process.env.CDNURL}/templates/blank.png`,
+                        req.body.accessories[2] ? `${process.env.CDNURL}/items/${req.body.accessories[2]}/internal.png` : `${process.env.CDNURL}/templates/blank.png`,
                     ], {
                         Canvas: Canvas,
                         Image: Image
                     })
                         .then(b64 => {
                             console.log("rendered")
-                            var calculatedAvatarBuffer = dataUriToBuffer(b64)
+                            let calculatedAvatarBuffer = dataUriToBuffer(b64);
                             minio.putObject('anolet', `avatars/${req.params.userId == "me" ? res.locals.id : req.params.userId}/internal.png`, calculatedAvatarBuffer, function (err, etag) {
                                 let fileName = path.join(__dirname, '../tmp') + "/" + (req.params.userId == "me" ? res.locals.id : req.params.userId) + ".png";
                                 let trimName = path.join(__dirname, '../tmp') + "/trim-" + (req.params.userId == "me" ? res.locals.id : req.params.userId) + ".png"
@@ -111,13 +110,13 @@ router.route("/").post(validate(avatarValidation, {}, {}), async (req, res) => {
 
 router.route("/:type").get((req, res) => {
     if (req.params.type != "internal" && req.params.type != "preview") return res.status(400).send("Invalid type");
-    if (req.params.userId.split("_")[0] == "player") return res.redirect("https://cdn.anolet.com/avatars/anolet/" + req.params.type + ".png")
+    if (req.params.userId.split("_")[0] == "player") return res.redirect("https://process.env.CDNURL.anolet.com/avatars/anolet/" + req.params.type + ".png")
     User.findOne({ "id": req.params.userId }, "defaultRender").then(user => {
         if (user == null) return res.status(404).send()
         if (!user?.defaultRender) {
-            res.redirect("https://cdn.anolet.com/avatars/" + req.params.userId + "/" + req.params.type + ".png");
+            res.redirect(`${process.env.CDNURL}/avatars/${req.params.userId}/${req.params.type}.png`);
         } else {
-            res.redirect("https://cdn.anolet.com/avatars/defaults/" + req.params.type + "/" + user.defaultRender + ".png");
+            res.redirect(`${process.env.CDNURL}/avatars/defaults/${req.params.type}/${user.defaultRender}.png`);
         }
     });
 });
