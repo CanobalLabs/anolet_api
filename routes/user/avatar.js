@@ -114,7 +114,7 @@ router.route("/:type").get((req, res) => {
     if (req.params.userId.split("_")[0] == "player") return res.redirect("https://cdn.anolet.com/avatars/anolet/" + req.params.type + ".png")
     User.findOne({ "id": req.params.userId }, "defaultRender").then(user => {
         if (user == null) return res.status(404).send()
-        if (typeof user.defaultRender == "undefined") {
+        if (user.defaultRender === null) {
             res.redirect("https://cdn.anolet.com/avatars/anolet/" + req.params.type + ".png");
         } else {
             res.redirect("https://cdn.anolet.com/avatars/" + req.params.userId + "/" + req.params.type + "/" + user.defaultRender + ".png");
