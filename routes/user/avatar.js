@@ -48,14 +48,18 @@ router.route("/").post(validate(avatarValidation, {}, {}), async (req, res) => {
                 res.setHeader("content-type", "image/png");
                 // all good, let's set their avatar...
                 User.updateOne({ id: req.params.userId == "me" ? res.locals.id : req.params.userId }, {
-                    avatar: {
-                        accessories: req.body.accessories,
-                        bodies: req.body.bodies,
-                        shoes: req.body.shoes,
-                        faces: req.body.faces
+                    $set: {
+                        avatar: {
+                            accessories: req.body.accessories,
+                            bodies: req.body.bodies,
+                            shoes: req.body.shoes,
+                            faces: req.body.faces
+                        },
+                        bodyColor: req.body?.bodyColor || undefined,
                     },
-                    bodyColor: req.body?.bodyColor || undefined,
-                    defaultRender: undefined
+                    $unset: {
+                        defaultRender: undefined
+                    }
                 }).then(() => {
                     var cdn = "https://cdn.anolet.com"
                     // and now render it...
