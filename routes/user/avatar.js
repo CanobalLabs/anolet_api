@@ -2,6 +2,7 @@ const express = require('express');
 let router = express.Router({ mergeParams: true });
 
 const User = require("../../models/user.js");
+const Item = require("../../models/item.js");
 const mergeImages = require('merge-images');
 const { Canvas, Image } = require('canvas');
 var dataUriToBuffer = require('data-uri-to-buffer');
@@ -18,9 +19,9 @@ router.route("/").post(validate(avatarValidation, {}, {}), async (req, res) => {
 
     User.findOne({ id: req.params.userId == "me" ? res.locals.id : req.params.userId }).then(usr => {
         // Jumble up all item ids, then make sure the user owns them
-        var chosenitems = req.body.accessories.concat(req.body.bodies, req.body.faces, req.body.shoes)
-        chosenitems.forEach(async (item, index) => {
-            if (!usr.belongings.includes(item)) {
+        var chosenitems = req.body.accessories.concat(req.body.bodies, req.body.faces, req.body.shoes);
+        chosenitems.forEach(async (itm, index) => {
+            if (!usr.belongings.includes(itm)) {
                 return res.status(400).send("You do not own 1 or more of these items.");
             }
             if ((req.body.bodies[0] == "specialitem-1" || req.body.bodies[0] == "specialitem-2") && (!req.body?.bodyColor || !/^#([0-9a-f]{3}){1,2}$/i.test('#' + req.body.bodyColor))) {
@@ -30,16 +31,16 @@ router.route("/").post(validate(avatarValidation, {}, {}), async (req, res) => {
             if (req.body.bodies[0] != "specialitem-1" && req.body.bodies[0] != "specialitem-2" && req.body?.bodyColor) {
                 return res.status(400).send("'bodyColor' can only be used with the specialitem-1/2 body.");
             }
-            if (req.body.accessories.find(item) && (await Item.findOne({ id: item })).type != "accessory") {
+            if (req.body.accessories.includes(itm) && (await Item.findOne({ id: itm })).type != "accessory") {
                 return res.status(400).send("Invalid item type for accessory slot.");
             }
-            if (req.body.bodies.find(item) && (await Item.findOne({ id: item })).type != "body") {
+            if (req.body.bodies.includes(itm) && (await Item.findOne({ id: itm })).type != "body") {
                 return res.status(400).send("Invalid item type for body slot.");
             }
-            if (req.body.faces.find(item) && (await Item.findOne({ id: item })).type != "face") {
+            if (req.body.faces.includes(itm) && (await Item.findOne({ id: itm })).type != "face") {
                 return res.status(400).send("Invalid item type for face slot.");
             }
-            if (req.body.shoes.find(item) && (await Item.findOne({ id: item })).type != "shoes") {
+            if (req.body.shoes.includes(itm) && (await Item.findOne({ id: itm })).type != "shoes") {
                 return res.status(400).send("Invalid item type for shoes slot.");
             }
             if (index + 1 == chosenitems.length) {
@@ -57,6 +58,7 @@ router.route("/").post(validate(avatarValidation, {}, {}), async (req, res) => {
                 }).then(() => {
                     var cdn = "https://cdn.anolet.com"
                     // and now render it...
+                    console.log("rendering")
                     mergeImages([
                         req.body?.bodyColor ? `https://api-staging.anolet.com/asset/${req.body.bodies[0]}/${req.body.bodyColor}` : `${cdn}/items/${req.body.bodies[0]}/internal.png`,
                         { src: `${cdn}/items/${req.body.faces[0]}/internal.png`, y: req.body.faceOffset || 20 },
@@ -69,6 +71,7 @@ router.route("/").post(validate(avatarValidation, {}, {}), async (req, res) => {
                         Image: Image
                     })
                         .then(b64 => {
+                            console.log("rendered")
                             var calculatedAvatarBuffer = dataUriToBuffer(b64)
                             minio.putObject('anolet', `avatars/${req.params.userId == "me" ? res.locals.id : req.params.userId}/internal.png`, calculatedAvatarBuffer, function (err, etag) {
                                 let fileName = path.join(__dirname, '../tmp') + "/" + (req.params.userId == "me" ? res.locals.id : req.params.userId) + ".png";
