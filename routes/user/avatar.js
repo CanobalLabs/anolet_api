@@ -117,7 +117,7 @@ router.route("/:type").get((req, res) => {
         if (!user?.defaultRender) {
             res.redirect("https://cdn.anolet.com/avatars/" + req.params.userId + "/" + req.params.type + ".png");
         } else {
-            res.redirect("https://cdn.anolet.com/avatars/anolet/" + req.params.type + ".png");
+            res.redirect("https://cdn.anolet.com/avatars/defaults/" + req.params.type + "/" + user.defaultRender + ".png");
         }
     });
 });
