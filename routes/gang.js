@@ -1,6 +1,6 @@
 const express = require('express');
 let router = express.Router();
-const { Gang } = require("../models/gang.js");
+const Gang = require("../models/gang.js");
 const GangValidator = require("../validation/gang.js");
 const { validate } = require("express-validation");
 const minio = require("../modules/Minio.js");

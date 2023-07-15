@@ -56,7 +56,7 @@ const GangMessage = new Schema({
 
 })
 
-const Gang = mongoose.model("Gang", new Schema({
+const GangSchema = new Schema({
     id: {
         type: String,
         required: true
@@ -94,6 +94,8 @@ const Gang = mongoose.model("Gang", new Schema({
         type: Date,
         required: true
     }
-}));
+});
+
+const Gang = mongoose.model("Gang", GangSchema);
 
 module.exports = Gang;
