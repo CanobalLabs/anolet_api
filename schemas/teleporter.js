@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const teleporterSchema = mongoose.Schema({
+const teleporterSchema = new mongoose.Schema({
     id: {
         type: String,
         required: true,

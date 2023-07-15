@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const worldSettingsSchema = mongoose.Schema({
+const worldSettingsSchema = new mongoose.Schema({
     movementType: {
         type: String,
         required: true,

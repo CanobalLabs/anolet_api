@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
-const belongingsSchema = mongoose.Schema({
+const belongingsSchema = new mongoose.Schema({
     accessories: [String],
     faces: [String],
     bodies: [String],
     shoes: [String],
-    bodyColor: String
+    bodyColor: String || undefined
 });
 
 module.exports = belongingsSchema;

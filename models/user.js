@@ -8,10 +8,7 @@ module.exports = mongoose.model("User", new Schema({
     },
     belongings: [String],
     avatar: require("../schemas/belongings"),
-    defaultRender: {
-        type: Boolean,
-        required: true
-    },
+    defaultRender: Number,
     ranks: [String],
     suspensions: [require("../schemas/suspension")]
 }));

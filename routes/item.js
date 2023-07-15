@@ -4,8 +4,8 @@ const Item = require("../models/item.js");
 const User = require("../models/user.js");
 const CanobalUser = require("../models/canobalUser.js");
 const Transaction = require("../models/transaction.js");
-var minio = require("../modules/Minio.js");
-var bodyParser = require('body-parser');
+const minio = require("../modules/Minio.js");
+const bodyParser = require('body-parser');
 const { validate } = require('express-validation')
 const validation = require("../validation/item.js");
 const validationEdit = require("../validation/itemEdit.js");
@@ -15,10 +15,10 @@ const CalculatePermissions = require("../modules/CalculatePermissions.js");
 router.route("/").post(validate(validation, {}, {}), async (req, res) => {
     if (!res.locals.id) return res.status(401).send();
     if (!(await CalculatePermissions(res.locals.id)).includes("UPLOAD_ANOLET") && !(await CalculatePermissions(res.locals.id)).includes("UPLOAD_SELF")) return res.status(403).send();
-    var genid = uuidv4()
+    const genId = uuidv4();
     if (!res.locals.permissions.includes("UPLOAD_ANOLET") && req.body?.anoletAccount) return res.status(403).send("You can't publish to the Anolet account");
     if (!res.locals.permissions.includes("UPLOAD_SELF") && !req.body?.anoletAccount) return res.status(403).send("You can't publish as yourself");
-    new Item({
+    await new Item({
         name: req.body.name,
         description: req.body.description,
         owner: !req.body?.anoletAccount ? res.locals.id : "anolet",
@@ -30,32 +30,32 @@ router.route("/").post(validate(validation, {}, {}), async (req, res) => {
         salePrice: 0,
         assetUploaded: false,
         available: false,
-        id: genid,
+        id: genId,
         created: new Date()
     }).save();
-    res.send(genid);
+    res.send(genId);
 })
 
 router.route("/s").get(async (req, res) => {
     // remember for frontend devs, pages start at 0 on the backend
-    var query = { available: true };
-    var search = "";
+    let query = {available: true};
+    let search = "";
     if (req.headers["x-anolet-filter"]) query = { type: req.headers["x-anolet-filter"], available: true }
     if (req.headers["x-anolet-filter"] == "my-creations") query = { manager: res.locals.id }
     if (req.headers["x-anolet-search"]) { search = req.headers["x-anolet-search"]; query.$text = { $search: search }; }
-    var dbresp = Item.find(query, search ? { score: { $meta: "textScore" } } : undefined);
+    const dbResponse = Item.find(query, search ? {score: {$meta: "textScore"}} : undefined);
 
     if (search) {
-        dbresp.sort({ score: { $meta: "textScore" } }, {_id: -1 }).exec((err, docs) => { res.json(docs) });
+        dbResponse.sort({ score: { $meta: "textScore" }}, { _id: -1 }).exec((err, docs) => { res.json(docs) });
     } else {
-        dbresp.sort({_id:-1}).exec((err, docs) => { res.json(docs) });
+        dbResponse.sort({_id: -1}).exec((err, docs) => { res.json(docs) });
     }
 
 });
 
 const sharp = require('sharp');
 const trimImage = require("trim-image");
-var fs = require('fs');
+const fs = require('fs');
 const path = require('path');
 
 router.route("/:itemId/upload").post(bodyParser.raw({
@@ -76,7 +76,7 @@ router.route("/:itemId/upload").post(bodyParser.raw({
                 let trimName = path.join(__dirname, '../tmp') + "/trim-" + req.params.itemId + ".png"
 
                 // Generate Preview
-                fs.writeFile(fileName, dat, function (err) {
+                fs.writeFile(fileName, dat,function (err) {
                     trimImage(fileName, trimName, undefined, function (err) {
                         console.log(err);
                         // We have to wait a bit for the file to be written. For some reason the callback is called before file writing is complete, so this is a ducktape solution for now.
@@ -106,7 +106,7 @@ router.route("/:itemId/purchase").post((req, res) => {
     Item.findOne({ "id": req.params.itemId }, "price saleEnd salePrice available owner").then(item => {
         if (item == null) return res.status(400).send("That item doesn't exist.");
         if (item.available == false) return res.status(400).send("Item is not available");
-        var price = null;
+        let price = null;
         if (new Date(item.saleEnd) >= new Date()) {
             // item is on sale
             price = item.salePrice

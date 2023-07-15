@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const coordinatesSchema = mongoose.Schema({
+const coordinatesSchema = new mongoose.Schema({
     x: {
         type: Number,
         required: true,

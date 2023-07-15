@@ -4,16 +4,16 @@ const Game = require("../models/game.js");
 
 router.route("/s").get((req, res) => {
     // remember for frontend devs, pages start at 0 on the backend
-    var query = {};
-    var page = 0;
+    const query = {};
+    let page = 0;
     if (req.query.page) page = req.query.page
     Game.find(query, undefined, { skip: 20 * page, limit: 20, sort: { playing: "desc" } }, function (err, results) {
         res.json(results)
     });
 });
 
-router.route("/:gameId/cacheableAssets").get((req, res) => {
-    Game.findOne({ "id": req.params.gameId }).then(game => {
+router.get("/:gameId/cacheableAssets").get((req, res) => {
+    Game.findOne({ "id": req.params }).then(game => {
         // Returns all assetURLs, add game privacy check soon
         res.json(game.zones.map(zone => zone.layers.map(layer => layer.assetURL)).flat());
     });

@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
-const suspensionSchema = mongoose.Schema({
+const suspensionSchema = new mongoose.Schema({
     id: String,
     source: String, // link
-    sourceName: String, // type of offending material, eg: "Chat Message", "Profile Picture", "User Description" etc etc
+    sourceName: String, // type of offending material, eg: "Chat Message", "Profile Picture", "User Description", etc.
     sourceContent: String, // offending material, eg: "I hate bald people", ""
     sourceContentType: {
         type: String,

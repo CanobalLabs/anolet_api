@@ -62,4 +62,4 @@ const modelSchema = new Schema({
 });
 
 modelSchema.index({username: 'text'});
-module.exports = mongoose.model("CanobalUser", modelSchema);;
+module.exports = mongoose.model("CanobalUser", modelSchema);
