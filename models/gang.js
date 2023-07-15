@@ -56,12 +56,16 @@ const GangMessage = new Schema({
 
 })
 
-const Gang = mongoose.model("Group", new Schema({
+const Gang = mongoose.model("Gang", new Schema({
     id: {
         type: String,
         required: true
     },
-    name: {
+    displayName: {
+        type: String,
+        required: true
+    },
+    realName: {
         type: String,
         required: true
     },
@@ -92,4 +96,4 @@ const Gang = mongoose.model("Group", new Schema({
     }
 }));
 
-module.exports = [Gang, GangMember, GangRole, GangMessage, GangApplication];
+module.exports = Gang;

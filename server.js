@@ -39,6 +39,7 @@ const UserRoute = require("./routes/user/index.js");
 const CanobalLabsRoute = require("./routes/canobalLabs/index.js");
 const GameRoute = require("./routes/game.js");
 const ItemRoute = require("./routes/item.js");
+const GangRoute = require("./routes/gang.js");
 const ACCService = require("./routes/ACCService.js");
 
 // Use Routes
@@ -46,6 +47,7 @@ app.use("/user", UserRoute);
 app.use("/canobalLabs", CanobalLabsRoute);
 app.use("/game", GameRoute);
 app.use("/item", ItemRoute);
+app.use("/gang", GangRoute);
 app.use("/ACCService", ACCService);
 
 // Error Handler
