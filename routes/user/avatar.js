@@ -55,7 +55,7 @@ router.route("/").post(validate(avatarValidation, {}, {}), async (req, res) => {
                         faces: req.body.faces
                     },
                     bodyColor: req.body?.bodyColor || undefined,
-                    defaultRender: false
+                    defaultRender: undefined
                 }).then(() => {
                     var cdn = "https://cdn.anolet.com"
                     // and now render it...
@@ -110,10 +110,10 @@ router.route("/:type").get((req, res) => {
     if (req.params.userId.split("_")[0] == "player") return res.redirect("https://cdn.anolet.com/avatars/anolet/" + req.params.type + ".png")
     User.findOne({ "id": req.params.userId }, "defaultRender").then(user => {
         if (user == null) return res.status(404).send()
-        if (user.defaultRender) {
-            res.redirect("https://cdn.anolet.com/avatars/anolet/" + req.params.type + ".png")
+        if (typeof user.defaultRender == "undefined") {
+            res.redirect("https://cdn.anolet.com/avatars/anolet/" + req.params.type + ".png");
         } else {
-            res.redirect("https://cdn.anolet.com/avatars/" + req.params.userId + "/" + req.params.type + ".png")
+            res.redirect("https://cdn.anolet.com/avatars/" + req.params.userId + "/" + req.params.type + "/" + user.defaultRender + ".png");
         }
     });
 });
