@@ -11,6 +11,7 @@ const avatarValidation = require("../../validation/avatar.js");
 const trimImage = require("trim-image");
 const path = require('path');
 var minio = require("../../modules/Minio.js");
+const fs = require('fs');
 
 router.route("/").post(validate(avatarValidation, {}, {}), async (req, res) => {
     if (!res.locals.id) return res.status(401).send("Unauthorized");
