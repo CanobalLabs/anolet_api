@@ -69,9 +69,9 @@ router.route("/user/:userId/pfp").get((req, res) => {
     CanobalUser.findOne({ "id": req.params.userId == "me" ? res.locals.id : req.params.userId }, "pfp").then(user => {
         if (user == null) return res.status(404).send()
         if (user.pfp == "default") {
-            res.redirect(`${process.env.CDNURL}/pfps/default.png`)
+            res.redirect(`${process.env.CDN_URL}/pfps/default.png`)
         } else {
-            res.redirect(`${process.env.CDNURL}/pfps/${req.params.userId == "me" ? res.locals.id : req.params.userId}/pfp.${user.pfp}`);
+            res.redirect(`${process.env.CDN_URL}/pfps/${req.params.userId == "me" ? res.locals.id : req.params.userId}/pfp.${user.pfp}`);
         }
     });
 }).put(bodyParser.raw({

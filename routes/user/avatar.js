@@ -64,12 +64,12 @@ router.route("/").post(validate(avatarValidation, {}, {}), async (req, res) => {
                     // and now render it...
                     console.log("rendering")
                     mergeImages([
-                        req.body?.bodyColor ? `https://api-staging.anolet.com/asset/${req.body.bodies[0]}/${req.body.bodyColor}` : `${process.env.CDNURL}/items/${req.body.bodies[0]}/internal.png`,
-                        { src: `${process.env.CDNURL}/items/${req.body.faces[0]}/internal.png`, y: req.body.faceOffset || 20 },
-                        req.body.shoes[0] ? `${process.env.CDNURL}/items/${req.body.shoes[0]}/internal.png` : `${process.env.CDNURL}/templates/blank.png`,
-                        req.body.accessories[0] ? `${process.env.CDNURL}/items/${req.body.accessories[0]}/internal.png` : `${process.env.CDNURL}/templates/blank.png`,
-                        req.body.accessories[1] ? `${process.env.CDNURL}/items/${req.body.accessories[1]}/internal.png` : `${process.env.CDNURL}/templates/blank.png`,
-                        req.body.accessories[2] ? `${process.env.CDNURL}/items/${req.body.accessories[2]}/internal.png` : `${process.env.CDNURL}/templates/blank.png`,
+                        req.body?.bodyColor ? `https://api-staging.anolet.com/asset/${req.body.bodies[0]}/${req.body.bodyColor}` : `${process.env.CDN_URL}/items/${req.body.bodies[0]}/internal.png`,
+                        { src: `${process.env.CDN_URL}/items/${req.body.faces[0]}/internal.png`, y: req.body.faceOffset || 20 },
+                        req.body.shoes[0] ? `${process.env.CDN_URL}/items/${req.body.shoes[0]}/internal.png` : `${process.env.CDN_URL}/templates/blank.png`,
+                        req.body.accessories[0] ? `${process.env.CDN_URL}/items/${req.body.accessories[0]}/internal.png` : `${process.env.CDN_URL}/templates/blank.png`,
+                        req.body.accessories[1] ? `${process.env.CDN_URL}/items/${req.body.accessories[1]}/internal.png` : `${process.env.CDN_URL}/templates/blank.png`,
+                        req.body.accessories[2] ? `${process.env.CDN_URL}/items/${req.body.accessories[2]}/internal.png` : `${process.env.CDN_URL}/templates/blank.png`,
                     ], {
                         Canvas: Canvas,
                         Image: Image
@@ -110,13 +110,13 @@ router.route("/").post(validate(avatarValidation, {}, {}), async (req, res) => {
 
 router.route("/:type").get((req, res) => {
     if (req.params.type != "internal" && req.params.type != "preview") return res.status(400).send("Invalid type");
-    if (req.params.userId.split("_")[0] == "player") return res.redirect("https://process.env.CDNURL.anolet.com/avatars/anolet/" + req.params.type + ".png")
+    if (req.params.userId.split("_")[0] == "player") return res.redirect("https://process.env.CDN_URL.anolet.com/avatars/anolet/" + req.params.type + ".png")
     User.findOne({ "id": req.params.userId }, "defaultRender").then(user => {
         if (user == null) return res.status(404).send()
         if (!user?.defaultRender) {
-            res.redirect(`${process.env.CDNURL}/avatars/${req.params.userId}/${req.params.type}.png`);
+            res.redirect(`${process.env.CDN_URL}/avatars/${req.params.userId}/${req.params.type}.png`);
         } else {
-            res.redirect(`${process.env.CDNURL}/avatars/defaults/${req.params.type}/${user.defaultRender}.png`);
+            res.redirect(`${process.env.CDN_URL}/avatars/defaults/${req.params.type}/${user.defaultRender}.png`);
         }
     });
 });
