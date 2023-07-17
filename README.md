@@ -37,7 +37,7 @@ doppler setup
 You'll see a message that says "Use default settings from repo config file (...)?". Answer yes.
 You have now configured Doppler.
 
-If you want to hange any environment variables for testing purposes, [create a branched config](https://docs.doppler.com/docs/branch-configs).
+If you want to change any environment variables for testing purposes, [create a branched config](https://docs.doppler.com/docs/branch-configs).
 
 ### Installing packages
 Install all the NPM packages by running the following command:

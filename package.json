@@ -2,11 +2,13 @@
   "name": "com.anolet.platform",
   "version": "1.0.0",
   "description": "Anolet API",
-  "main": "server.js",
+  "main": "build/server.js",
   "scripts": {
-    "start": "node server.js",
-    "startwdoppler": "doppler run -- node server.js",
-    "dev": "doppler run -- nodemon server.js"
+    "build": "tsc",
+    "clean": "rm -rf build",
+    "start": "node build/server.js",
+    "startwdoppler": "doppler run -- node build/server.js",
+    "dev": "doppler run -- nodemon build/server.js"
   },
   "engines": {
     "node": "17.1.0"
@@ -26,6 +28,7 @@
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
+    "@types/express": "^4.17.17",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "canvas": "^2.11.2",
@@ -52,6 +55,7 @@
     "sharp": "^0.31.3",
     "trim-image": "^1.0.3",
     "twilio": "^4.11.1",
+    "typescript": "^5.1.6",
     "uuid": "^8.3.2"
   }
 }
