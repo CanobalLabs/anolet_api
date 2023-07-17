@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const GangRole = new Schema({
     id: {
-        type: String,
+        type: Number,
         required: true
     },
     name: {
@@ -12,7 +12,7 @@ const GangRole = new Schema({
     },
     permissions: {
         type: [String],
-        enum: ["placeholder"],
+        enum: ["UPDATE_GUILD", "UPLOAD_ICON", "BAN_MEMBERS", "UPDATE_APPLICATIONS", "SEND_MESSAGES", "*"],
         required: true
     },
     hoist: Number
@@ -56,7 +56,7 @@ const GangMessage = new Schema({
 
 })
 
-const GangSchema = new Schema({
+const Gang = mongoose.model("Gang", new Schema({
     id: {
         type: String,
         required: true
@@ -73,7 +73,10 @@ const GangSchema = new Schema({
         type: String,
         required: true
     },
-    visible: Boolean, // Visible to public through search and featured groups.
+    visible: {
+        type: Boolean,
+        required: true
+    }, // Visible to public through search and featured groups.
     security: {
         type: String,
         required: true,
@@ -87,15 +90,25 @@ const GangSchema = new Schema({
         type: [GangMember],
         required: true
     },
+    roles: {
+        type: [GangRole],
+        required: true
+    },
     pendingMembers: [GangApplication],
     bannedMembers: [String],
     wall: [GangMessage],
+    iconUploaded: {
+        type: Boolean,
+        required: true
+    },
+    defaultRole: {
+        type: Number,
+        required: true
+    },
     created: {
         type: Date,
         required: true
     }
-});
-
-const Gang = mongoose.model("Gang", GangSchema);
+}));
 
 module.exports = Gang;

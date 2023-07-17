@@ -1,64 +1,67 @@
 const { Joi } = require("express-validation");
 
-const JoiGuildMember = Joi.object({
-    userId: Joi.string().regex(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i),
-    roles: Joi.array().items(Joi.object({
-        name: Joi.string().min(1).max(256).required().regex(/^[a-zA-Z0-9_.-]*$/),
-        permissions: Joi.array().items(Joi.string().valid("placeholder")),
-        hoist: Joi.number().min(1)
-    }))
-})
-
 module.exports = class GangValidator {
-    #type;
-
-    constructor(type) {
-        this.#type = type;
+    static create() {
+        return {
+            body: Joi.object({
+                displayName: Joi.string().min(1).max(256).required(),
+                realName: Joi.string().min(1).max(256).regex(/^[a-zA-Z0-9_.-]*$/).required(),
+                description: Joi.string().min(1).max(2048).required(),
+                visible: Joi.boolean().default(true),
+                security: Joi.string().valid("public", "apply", "invite").required(),
+            })
+        }
     }
 
-    getValidator() {
-        if (this.#type === "creation") {
-            return {
-                body: Joi.object({
-                    displayName: Joi.string().min(1).max(256).required(),
-                    realName: Joi.string().min(1).max(256).regex(/^[a-zA-Z0-9_.-]*$/).required(),
-                    description: Joi.string().min(1).max(2048).required(),
-                    visible: Joi.boolean().default(true),
-                    security: Joi.string().valid("public", "apply", "invite").required(),
-                    owner: Joi.string().regex(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i).required(),
-                    members: Joi.array().items(JoiGuildMember),
-                    pendingMembers: Joi.array().items(Joi.object({
-                        userId: Joi.string().regex(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i),
-                        content: Joi.string().min(0).max(2048)
-                    })),
-                    bannedMembers: Joi.array().items(Joi.string()),
-                    wall: Joi.array().items(Joi.object({
-                        member: JoiGuildMember,
-                        content: Joi.string().min(0).max(2048)
-                    })),
-                })
-            }
-        } else {
-            return {
-                body: Joi.object({
-                    displayName: Joi.string().min(1).max(256),
-                    realName: Joi.string().min(1).max(256).regex(/^[a-zA-Z0-9_.-]*$/),
-                    description: Joi.string().min(1).max(2048),
-                    visible: Joi.boolean(),
-                    security: Joi.string().valid("public", "apply", "invite"),
-                    owner: Joi.string().regex(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i),
-                    members: Joi.array().items(JoiGuildMember),
-                    pendingMembers: Joi.array().items(Joi.object({
-                        userId: Joi.string().regex(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i),
-                        content: Joi.string().min(0).max(2048)
-                    })),
-                    bannedMembers: Joi.array().items(Joi.string()),
-                    wall: Joi.array().items(Joi.object({
-                        member: JoiGuildMember,
-                        content: Joi.string().min(0).max(2048)
-                    })),
-                })
-            }
+    static update() {
+        return {
+            body: Joi.object({
+                displayName: Joi.string().min(1).max(256),
+                realName: Joi.string().min(1).max(256).regex(/^[a-zA-Z0-9_.-]*$/),
+                description: Joi.string().min(1).max(2048),
+                visible: Joi.boolean(),
+                security: Joi.string().valid("public", "apply", "invite"),
+                owner: Joi.string().regex(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i),
+                defaultRole: Joi.number().min(0).max(1024)
+            })
+        }
+    }
+
+    static roleCreate() {
+        return {
+            body: Joi.object({
+                name: Joi.string().min(1).max(256).required(),
+                permissions: Joi.array().items(Joi.string().valid("UPDATE_GANG", "UPLOAD_ICON", "BAN_MEMBERS", "UPDATE_APPLICATIONS", "SEND_MESSAGES", "*")).required(),
+                hoist: Joi.number().integer().min(0).default(0)
+            })
+        }
+    }
+
+    static roleUpdate() {
+        return {
+            body: Joi.object({
+                name: Joi.string().min(1).max(256),
+                permissions: Joi.array().items(Joi.string().valid("UPDATE_GANG", "UPLOAD_ICON", "BAN_MEMBERS", "UPDATE_APPLICATIONS", "SEND_MESSAGES", "*")),
+                hoist: Joi.number().integer().min(0)
+            })
+        }
+    }
+
+    static messageCreate() {
+        return {
+            body: Joi.object({
+                member: Joi.string().regex(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i).required(),
+                content: Joi.string().min(1).max(2048).required()
+            })
+        }
+    }
+
+    static applicationCreate() {
+        return {
+            body: Joi.object({
+                member: Joi.string().regex(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i).required(),
+                content: Joi.string().min(1).max(2048).required()
+            })
         }
     }
 }

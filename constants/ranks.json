@@ -7,7 +7,8 @@
             "READ_USER_AUTH",
             "EDIT_AVATARS",
             "MODIFY_USER",
-            "SET_USER_AVATAR"
+            "SET_USER_AVATAR",
+            "SEE_HIDDEN_GANGS"
         ]
     },
     {
