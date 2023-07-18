@@ -1,0 +1,21 @@
+### send login to email (as anolet)
+# returns 200 on success
+POST {{baseurl}}/canobalLabs/login/sendLoginCode
+Content-Type: application/json
+
+{
+    "auth": "{{email}}",
+    "vendor": "anolet"
+}
+
+### get token from login code
+# returns 200 on success with a token in a json body
+POST {{baseurl}}/canobalLabs/login/{{code}}
+Content-Type: application/json
+
+{
+    "auth": "{{email}}",
+    "vendor": "anolet"
+}
+
+> {% client.global.set("token", response.body.json.token); %}

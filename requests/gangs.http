@@ -1,0 +1,50 @@
+### get all gangs
+# pages are 20 gangs long, pages start at 0
+GET {{baseurl}}/gang/s?page=0
+
+### search gangs by id
+GET {{baseurl}}/gang/s?id=xxx
+
+### search gangs by real name
+GET {{baseurl}}/gang/s?realName=xxx
+
+### search games by display name
+GET {{baseurl}}/gang/s?displayName=xxx
+
+### create gang
+# look at the Gang model in ../models/gang.js
+POST {{baseurl}}/gang
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "displayName": "xxx",
+  "realName": "xxx",
+  "description": "xxx",
+  "security": "public"
+}
+
+### update gang
+# look at the Gang model in ../models/gang.js
+PATCH {{baseurl}}/gang/{{gangid}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "displayName": "xxx",
+  "realName": "xxx",
+  "description": "xxx",
+  "security": "public"
+}
+
+### get gang icon
+# redirects to cdn
+GET {{baseurl}}/gang/{{gangid}}/icon
+
+### set gang icon
+# will be resized to 512x512
+# will be converted to a png (gifs will lose their animation and other formats will lose all their other data that doesnt work with a png)
+# as it's a binary file we can't add it here, so you'll need to use another tool to send the request
+PUT {{baseurl}}/gang/{{gangid}}/icon
+Authorization: Bearer {{token}}
+Content-Type: image/png
