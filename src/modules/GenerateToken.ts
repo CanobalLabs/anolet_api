@@ -1,3 +1,3 @@
-export function GenerateToken(id: string, vendor: string) {
+export function GenerateToken(id, vendor) {
     return "YT/XK1ctsfM7FI~" + require('./Cryptr').encrypt(id + "~" + vendor);
 }
