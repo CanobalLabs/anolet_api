@@ -4,3 +4,8 @@ node_modules
 *.pfx
 *.log
 newrelic_agent.log
+
+.idea
+build
+
+requests/http-client.private.env.json
