@@ -51,6 +51,10 @@ const modelSchema = new Schema({
         type: String,
         default: null
     },
+    displayName: {
+        type: String,
+        required: true
+    },
     gems: {
         type: Number,
         default: 500
