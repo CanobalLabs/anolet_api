@@ -8,7 +8,7 @@ const { validate } = require('express-validation');
 const fs = require('fs');
 const GenerateToken = require("../../modules/GenerateToken.js");
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.MAIL);
+sgMail.setApiKey(process.env.MAIL_SECRET);
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
