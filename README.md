@@ -3,7 +3,7 @@
 		<img align="center"
 			width="600"
 			alt="Logo"
-			src="https://cdn.anolet.com/logos/longform/color/LongFormSideBlack80.png">
+			src="https://cdn.canobal.com/logos/longform/color/LongFormSideBlack80.png">
 	</a>
 </h1>
 
