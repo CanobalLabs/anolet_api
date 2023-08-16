@@ -4,8 +4,8 @@ module.exports = class GangValidator {
     static create() {
         return {
             body: Joi.object({
-                displayName: Joi.string().min(1).max(256).required(),
                 realName: Joi.string().min(1).max(256).regex(/^[a-zA-Z0-9_.-]*$/).required(),
+                displayName: Joi.string().min(1).max(256).required(),
                 description: Joi.string().min(1).max(2048).required(),
                 visible: Joi.boolean().default(true),
                 security: Joi.string().valid("public", "apply", "invite").required(),
@@ -43,6 +43,50 @@ module.exports = class GangValidator {
                 name: Joi.string().min(1).max(256),
                 permissions: Joi.array().items(Joi.string().valid("UPDATE_GANG", "UPLOAD_ICON", "BAN_MEMBERS", "UPDATE_APPLICATIONS", "SEND_MESSAGES", "*")),
                 hoist: Joi.number().integer().min(0)
+            })
+        }
+    }
+
+    static memberKick() {
+        return {
+            body: Joi.object({
+                reason: Joi.string().min(1).max(2048).required()
+            })
+        }
+    }
+
+    static memberWarn() {
+        return {
+            body: Joi.object({
+                reason: Joi.string().min(1).max(2048).required(),
+                expires: Joi.date().required()
+            })
+        }
+    }
+
+    static memberBan() {
+        return {
+            body: Joi.object({
+                reason: Joi.string().min(1).max(2048).required(),
+                expires: Joi.date().required()
+            })
+        }
+    }
+
+    static memberGameBan() {
+        return {
+            body: Joi.object({
+                reason: Joi.string().min(1).max(2048).required(),
+                expires: Joi.date().required()
+            })
+        }
+    }
+
+    static memberMute() {
+        return {
+            body: Joi.object({
+                reason: Joi.string().min(1).max(2048).required(),
+                expires: Joi.date().required()
             })
         }
     }

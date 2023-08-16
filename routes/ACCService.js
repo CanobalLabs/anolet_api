@@ -2,21 +2,34 @@ const express = require('express');
 let router = express.Router();
 const Game = require("../models/game.js");
 const jwt = require('jsonwebtoken');
+const {Gang} = require("../models/gang");
 
 router.route("/:gameId/requestGameLaunchAuthorization").post((req, res) => {
-    Game.findOne({ "id": req.params.gameId }).then(game => {
+    Game.findOne({"id": req.params.gameId}).then(async game => {
         if (game == null) return res.status(404).send();
         // for partial legacy compatibility
+
+        if (game.creator.type === "gang") {
+            let gang = await Gang.findOne({"id": game.creator.id});
+
+            if (gang.punishments.filter(punishment => (punishment.userId === req.locals.id && punishment.type === "gameban" && punishment.expires > Date.now())).length > 0) {
+                return res.status(403).send("You are banned from this game.");
+            }
+        }
+
         if (game.privacyLevel == 0 || game.privacyLevel == -1) {
             // Any user can access, authorize.
-            res.send(jwt.sign({ game: req.params.gameId, user: res.locals.id }, process.env.HASH, { expiresIn: "30s" }));
+            res.send(jwt.sign({game: req.params.gameId, user: res.locals.id}, process.env.HASH, {expiresIn: "30s"}));
         } else if (game.privacyLevel == 1) {
             // Only the creator can access, check
             console.log(res.locals.id, game.creator.id)
             if (res.locals.id == game.creator.id) {
-                res.send(jwt.sign({ game: req.params.gameId, user: res.locals.id }, process.env.HASH, { expiresIn: "30s" }));
+                res.send(jwt.sign({
+                    game: req.params.gameId,
+                    user: res.locals.id
+                }, process.env.HASH, {expiresIn: "30s"}));
             } else {
-                res.status(403).send("You do not own that game.")
+                res.status(403).send("You do not own that game.");
             }
         }
     });

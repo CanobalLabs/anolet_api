@@ -1,33 +1,17 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const GangRole = new Schema({
-    id: {
-        type: Number,
-        required: true
-    },
-    name: {
-        type: String,
-        required: true
-    },
-    permissions: {
-        type: [String],
-        enum: ["UPDATE_GUILD", "UPLOAD_ICON", "BAN_MEMBERS", "UPDATE_APPLICATIONS", "SEND_MESSAGES", "*"],
-        required: true
-    },
-    hoist: Number
-});
-
 const GangMember = new Schema({
     userId: {
         type: String,
         required: true
     },
     roles: {
-        type: [GangRole],
+        type: [String],
         required: true
     }
 });
+
 
 const GangApplication = new Schema({
     userId: {
@@ -53,8 +37,60 @@ const GangMessage = new Schema({
         type: String,
         required: true
     }
-
 })
+
+const GangPunishment = new Schema({
+    id: {
+        type: String,
+        required: true
+    },
+    userId: {
+        type: String,
+        required: true
+    },
+    reason: {
+        type: String,
+        required: true
+    },
+    type: {
+        type: String,
+        enum: ["ban", "gameban", "mute", "warn", "kick"],
+        required: true
+    },
+    expires: {
+        type: Date,
+        required: true
+    },
+    issued: {
+        type: Date,
+        required: true
+    },
+    issuer: {
+        type: String,
+        required: true
+    },
+    active: {
+        type: Boolean,
+        required: true
+    }
+})
+
+const GangRole = new Schema({
+    id: {
+        type: Number,
+        required: true
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    permissions: {
+        type: [String],
+        enum: ["UPDATE_GUILD", "UPLOAD_ICON", "UPLOAD_BANNER", "BAN_MEMBERS", "KICK_MEMBERS", "MUTE_MEMBERS", "WARN_MEMBERS", "GAME_BAN_MEMBERS", "UPDATE_APPLICATIONS", "SEND_MESSAGES", "*"],
+        required: true
+    },
+    hoist: Number
+});
 
 const Gang = mongoose.model("Gang", new Schema({
     id: {
@@ -94,10 +130,23 @@ const Gang = mongoose.model("Gang", new Schema({
         type: [GangRole],
         required: true
     },
-    pendingMembers: [GangApplication],
-    bannedMembers: [String],
-    wall: [GangMessage],
+    pendingMembers: {
+        type: [GangApplication],
+        required: true
+    },
+    punishments: {
+        type: [GangPunishment],
+        required: true
+    },
+    wall: {
+        type: [GangMessage],
+        required: true
+    },
     iconUploaded: {
+        type: Boolean,
+        required: true
+    },
+    bannerUploaded: {
         type: Boolean,
         required: true
     },
@@ -111,4 +160,22 @@ const Gang = mongoose.model("Gang", new Schema({
     }
 }));
 
-module.exports = Gang;
+async function resolveGangChildren(gang) {
+    gang.resolvedMembers = gang.members.map(member => {
+        member.roles = member.roles.map(role => {
+            role = gang.roles.forEach(r => {
+                gang.roles.find(r => r.id === role);
+            });
+        });
+        return member;
+    });
+}
+
+module.exports = {
+    Gang,
+    GangRole,
+    resolveGangChildren,
+    GangMember,
+    GangApplication,
+    GangMessage
+}

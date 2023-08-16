@@ -53,6 +53,7 @@ app.use("/ACCService", ACCService);
 // Error Handler
 app.use(function (err, req, res, next) {
   if (err instanceof ValidationError) {
+    console.log(req.data);
     return res.status(err.statusCode).json(err)
   } else {
     console.error(err)
@@ -64,3 +65,5 @@ app.use(function (err, req, res, next) {
 app.listen(process.env.PORT || 8080, () => {
   console.log("Server Started");
 });
+
+module.exports = app;
