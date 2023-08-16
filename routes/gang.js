@@ -86,16 +86,16 @@ router.post("/", validate(GangValidator.create()), async (req, res) => {
         ],
         roles: [
             {
+                id: 0,
+                name: "Member",
+                permissions: ["SEND_MESSAGES", "VIEW_MESSAGES"],
+                hoist: 0
+            },
+            {
                 id: 1,
                 name: "Owner",
                 permissions: ["*"],
                 hoist: 999
-            },
-            {
-                id: 0,
-                name: "Member",
-                permissions: ["SEND_MESSAGES"],
-                hoist: 0
             }
         ],
         iconUploaded: false,
@@ -279,7 +279,20 @@ router.post("/:gangId/member", async (req, res) => {
     const gang = await Gang.findOne({id: req.params.gangId});
 
     if (!gang) return res.status(404).send("Gang not found");
-    if (gang.security !== "public") return res.status(403).send("Gang is not public");
+
+    switch (gang.security) {
+        case "public":
+            break;
+        case "apply":
+            return res.status(403).send("User must apply to join gang");
+        case "invite":
+            if (gang.invites.filter(i => i.userId === res.locals.id).length == 0) return res.status(403).send("User is not invited to gang");
+            if (gang.invites.filter(i => i.userId === res.locals.id && i.expires < Date.now()).length > 0) return res.status(403).send("User invite has expired");
+            gang.invites.filter(i => i.userId === res.locals.id).forEach((invite) => gang.invites.remove(invite));
+            break;
+        default:
+            return res.status(500).send("Gang is malformed");
+    }
 
     if (gang.members.filter(m => res.locals.id === m.userId).length > 0) return res.status(409).send("User is already in gang");
     if (gang.punishments.filter(punishment => (res.locals.id === punishment.userId && punishment.type === "ban" && punishment.expires > Date.now())).length > 0) return res.status(403).send("User is banned from gang");
@@ -295,24 +308,25 @@ router.post("/:gangId/member", async (req, res) => {
     res.json(member);
 });
 
-router.delete("/:gangId/member", async (req, res) => {
-    const gang = await Gang.findOne({id: req.params.gangId});
+// see member punishments
+// router.delete("/:gangId/member", async (req, res) => {
+//     const gang = await Gang.findOne({id: req.params.gangId});
+//
+//     if (!gang) return res.status(404).send("Gang not found");
+//     if (gang.security !== "public") return res.status(403).send("Gang is not public");
+//
+//     if (gang.owner == res.locals.id) return res.status(403).send("Owner cannot leave gang");
+//
+//     let member = gang.members.filter(m => res.locals.id === m.userId)[0];
+//     if (!member) return res.status(409).send("User is not in gang");
+//
+//     gang.members.remove(member);
+//     await gang.save();
+//
+//     res.status(204).send();
+// });
 
-    if (!gang) return res.status(404).send("Gang not found");
-    if (gang.security !== "public") return res.status(403).send("Gang is not public");
-
-    if (gang.owner == res.locals.id) return res.status(403).send("Owner cannot leave gang");
-
-    let member = gang.members.filter(m => res.locals.id === m.userId)[0];
-    if (!member) return res.status(409).send("User is not in gang");
-
-    gang.members.remove(member);
-    await gang.save();
-
-    res.status(204).send();
-});
-
-router.delete("/:gangid/member/:userId/kick", validate(GangValidator.memberKick()), async (req, res) => {
+router.delete("/:gangId/member/:userId/kick", validate(GangValidator.memberKick()), async (req, res) => {
     const punishment = {
         id: uuidv4(),
         userId: req.params.userId,
@@ -338,7 +352,7 @@ router.delete("/:gangid/member/:userId/kick", validate(GangValidator.memberKick(
     res.status(204).json(punishment);
 });
 
-router.delete("/:gangid/member/:userId/ban", validate(GangValidator.memberBan()), async (req, res) => {
+router.delete("/:gangId/member/:userId/ban", validate(GangValidator.memberBan()), async (req, res) => {
     const punishment = {
         id: uuidv4(),
         userId: req.params.userId,
@@ -364,7 +378,7 @@ router.delete("/:gangid/member/:userId/ban", validate(GangValidator.memberBan())
     res.status(204).json(punishment);
 });
 
-router.post("/:gangid/member/:userId/gameBan", validate(GangValidator.memberGameBan()), async (req, res) => {
+router.post("/:gangId/member/:userId/gameBan", validate(GangValidator.memberGameBan()), async (req, res) => {
     const punishment = {
         id: uuidv4(),
         userId: req.params.userId,
@@ -389,7 +403,7 @@ router.post("/:gangid/member/:userId/gameBan", validate(GangValidator.memberGame
     res.json(punishment);
 });
 
-router.post("/:gangid/member/:userId/warn", validate(GangValidator.memberWarn()), async (req, res) => {
+router.post("/:gangId/member/:userId/warn", validate(GangValidator.memberWarn()), async (req, res) => {
     const punishment = {
         id: uuidv4(),
         userId: req.params.userId,
@@ -414,7 +428,7 @@ router.post("/:gangid/member/:userId/warn", validate(GangValidator.memberWarn())
     res.json(punishment);
 });
 
-router.post("/:gangid/member/:userId/mute", validate(GangValidator.memberMute()), async (req, res) => {
+router.post("/:gangId/member/:userId/mute", validate(GangValidator.memberMute()), async (req, res) => {
     const punishment = {
         id: uuidv4(),
         userId: req.params.userId,
@@ -428,8 +442,8 @@ router.post("/:gangid/member/:userId/mute", validate(GangValidator.memberMute())
     let gang = await Gang.findOne({id: req.params.gangId});
 
     if (!gang) return res.status(404).send("Gang not found");
-    vic = gang.members.filter((m) => m.userId === req.params.userId)[0];
-    if (!checkGangPerms(res, gang, "MUTE_MEMBERS", vic)) return res.status(403).send("You cannot mute this member");
+    const vic = gang.members.filter((m) => m.userId === req.params.userId)[0];
+    if (!await checkGangPerms(res, gang, "MUTE_MEMBERS", vic)) return res.status(403).send("You cannot mute this member");
     if (vic.roles.includes(gang.owner)) return res.status(403).send("You cannot mute the owner");
     if (vic.userId === req.locals.id) return res.status(403).send("You cannot mute yourself");
 
@@ -437,6 +451,88 @@ router.post("/:gangid/member/:userId/mute", validate(GangValidator.memberMute())
     await gang.save();
 
     res.json(punishment);
+});
+
+router.post("/:gangId/member/:memberId/role", validate(GangValidator.memberRole()), async (req, res) => {
+    const gang = await Gang.findOne({id: req.params.gangId});
+
+    if (!gang) return res.status(404).send("Gang not found");
+    const vic = gang.members.filter((m) => m.userId === req.params.memberId)[0];
+    if (!await checkGangPerms(res, gang, "MANAGE_ROLES", vic)) return res.status(403).send("You cannot manage this member's roles");
+    if (vic.roles.includes(gang.owner)) return res.status(403).send("You cannot manage the owner's roles");
+    if (vic.userId === req.locals.id) return res.status(403).send("You cannot manage your own roles");
+
+    if (!gang.roles.filter((r) => r.id === req.body.role)) return res.status(404).send("Role not found");
+
+    const member = gang.resolvedMembers.filter((m) => m.userId === res.locals.userId)[0];
+
+    let memberMaxRole = 0;
+
+    for (const role in member.roles) {
+        if (role.hoist > memberMaxRole) memberMaxRole = role.hoist;
+    }
+
+    if (req.body.role.hoist > memberMaxRole) return res.status(403).send("You cannot give this role to this member");
+
+    gang.members.filter((m) => m.userId === req.body.userId)[0].roles.push(req.body.role);
+
+    await gang.save();
+
+    res.status(204).send();
+});
+
+router.delete("/:gangId/member/:memberId/role/:roleId", async (req, res) => {
+    const gang = await Gang.findOne({id: req.params.gangId});
+
+    if (!gang) return res.status(404).send("Gang not found");
+    const vic = gang.members.filter((m) => m.userId === req.body.userId)[0];
+    if (!await checkGangPerms(res, gang, "MANAGE_ROLES", vic)) return res.status(403).send("You cannot manage this member's roles");
+    if (vic.roles.includes(gang.owner)) return res.status(403).send("You cannot manage the owner's roles");
+    if (vic.userId === req.locals.id) return res.status(403).send("You cannot manage your own roles");
+
+    gang.members.filter((m) => m.userId === req.body.userId)[0].roles.remove(req.params.roleId);
+
+    await gang.save();
+
+    res.status(204).send();
+});
+
+router.post("/:gangId/member/invite/:userId", async (req, res) => {
+    // todo notifications
+
+    const gang = await Gang.findOne({id: req.params.gangId});
+
+    if (!gang) return res.status(404).send("Gang not found");
+    if (!await checkGangPerms(res, gang, "INVITE_USER")) return res.status(403).send("You cannot create invites");
+
+    if (gang.members.filter((m) => m.userId === req.params.userId)[0]) return res.status(403).send("This user is already in the gang");
+    if (gang.punishments.filter((p) => p.userId === req.params.userId && p.type === "ban")[0]) return res.status(403).send("This user is banned from the gang");
+
+    const invite = {
+        id: uuidv4(),
+        userId: req.params.userId,
+        issued: Date.now(),
+        issuer: req.locals.id
+    }
+
+    gang.invites.push(invite);
+    await gang.save();
+
+    res.json(invite);
+});
+
+router.delete("/:gangId/member/invite/:inviteId", async (req, res) => {
+    const gang = await Gang.findOne({id: req.params.gangId});
+
+    if (!gang) return res.status(404).send("Gang not found");
+    if (!await checkGangPerms(res, gang, "RESCIND_INVITES")) return res.status(403).send("You cannot delete invites");
+
+    if (!gang.invites.filter((i) => i.id === req.params.inviteId)[0]) return res.status(404).send("Invite not found");
+
+    gang.invites.remove(req.params.inviteId);
+    await gang.save();
+
+    res.status(204).send();
 });
 
 router.get("/:gangId/application/s", async (req, res) => {
@@ -473,8 +569,7 @@ router.post("/:gangId/application/:userId/accept", async (req, res) => {
     Gang.findOne({id: req.params.gangId}).then(async gang => {
         if (!gang) return res.status(404).send("Gang not found");
 
-        checkGangPerms(res, gang, "UPDATE_APPLICATIONS");
-        if (res.headersSent) return;
+        if (!(await checkGangPerms(res, gang, "UPDATE_APPLICATIONS"))) return;
 
         if (gang.pendingMembers.filter((a) => a.userId === req.params.userId).length < 1) return res.status(404).send("No application exists with this user.");
         if (gang.punishments.filter(punishment => (res.locals.id === punishment.userId && punishment.type === "ban" && punishment.expires > Date.now())).length > 0) return res.status(403).send("User is banned from gang");
@@ -498,6 +593,83 @@ router.delete("/:gangId/application/:userId/deny", async (req, res) => {
         gang.pendingMembers.remove({userId: req.params.userId});
         await gang.save();
     })
+});
+
+router.get("/:gangId/message/s", async (req, res) => {
+    const gang = await Gang.findOne({id: req.params.gangId});
+
+    if (!gang) return res.status(404).send("Gang not found");
+
+    if (!(await checkGangPerms(res, gang, "VIEW_MESSAGES"))) return res.status(403).send("You cannot view messages in this gang");
+
+    let page = req.query.page ? req.query.page : 0;
+
+    let messages = gang.messages;
+    if (req.query.userId) messages = messages.filter((msg) => msg.member.userId === req.query.userId);
+    if (req.query.id) messages = messages.filter((msg) => msg.id === req.query.id);
+    if (req.query.replyingTo) messages = messages.filter((msg) => msg.replyingTo === req.query.replyingTo);
+    if (req.query.content) messages = messages.filter((msg) => msg.content.includes(req.query.content));
+    // todo: msg fuzzy search?
+    res.json(messages.slice(page * 20, page * 20 + 20));
+});
+
+router.post("/:gangId/message", validate(GangValidator.messageCreate()), async (req, res) => {
+    const gang = await Gang.findOne({id: req.params.gangId});
+
+    if (!gang) return res.status(404).send("Gang not found");
+
+    if (!(await checkGangPerms(res, gang, "SEND_MESSAGES"))) return res.status(403).send("You cannot send messages in this gang");
+
+    let message = {
+        id: uuidv4(),
+        content: req.body.content,
+        member: gang.members.filter((m) => m.userId === req.locals.id)[0],
+        sent: Date.now()
+    };
+
+    gang.wall.push(message);
+    await gang.save();
+
+    res.status(201).json(message);
+});
+
+router.post("/:gangId/message/:messageId", validate(GangValidator.messageCreate()), async (req, res) => {
+    const gang = await Gang.findOne({id: req.params.gangId});
+
+    if (!gang) return res.status(404).send("Gang not found");
+
+    if (!(await checkGangPerms(res, gang, "SEND_MESSAGES"))) return res.status(403).send("You cannot send messages in this gang");
+
+    if (gang.wall.filter((msg) => msg.id === req.params.messageId).length < 1) return res.status(404).send("No message exists with this id");
+
+    let message = {
+        id: uuidv4(),
+        content: req.body.content,
+        member: gang.members.filter((m) => m.userId === req.locals.id)[0],
+        replyingTo: req.params.messageId,
+        sent: Date.now()
+    };
+
+    gang.wall.push(message);
+    await gang.save();
+
+    res.status(201).json(message);
+});
+
+router.delete("/:gangId/message/:messageId", async (req, res) => {
+    const gang = await Gang.findOne({id: req.params.gangId});
+
+    if (!gang) return res.status(404).send("Gang not found");
+
+    const vic = gang.members.filter((m) => m.userId === req.locals.id)[0];
+
+    if (!(await checkGangPerms(res, gang, "DELETE_MESSAGES", vic))) return res.status(403).send("You cannot delete messages in this gang");
+
+    let message = gang.wall.filter((msg) => msg.id === req.params.messageId)[0];
+    if (!message) return res.status(404).send("Message not found");
+
+    gang.wall.remove(message);
+    await gang.save();
 });
 
 module.exports = router;

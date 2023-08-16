@@ -12,7 +12,6 @@ const GangMember = new Schema({
     }
 });
 
-
 const GangApplication = new Schema({
     userId: {
         type: String,
@@ -32,6 +31,10 @@ const GangMessage = new Schema({
     member: {
         type: GangMember,
         required: true
+    },
+    replyingTo: {
+        type: String,
+        required: false
     },
     content: {
         type: String,
@@ -65,7 +68,7 @@ const GangPunishment = new Schema({
         type: Date,
         required: true
     },
-    issuer: {
+    actor: {
         type: String,
         required: true
     },
@@ -90,6 +93,25 @@ const GangRole = new Schema({
         required: true
     },
     hoist: Number
+});
+
+const GangInvite = new Schema({
+    id: {
+        type: String,
+        required: true
+    },
+    invitedUser: {
+        type: String,
+        required: true
+    },
+    actor: {
+        type: String,
+        required: true
+    },
+    active: {
+        type: Boolean,
+        required: true
+    }
 });
 
 const Gang = mongoose.model("Gang", new Schema({
@@ -140,6 +162,10 @@ const Gang = mongoose.model("Gang", new Schema({
     },
     wall: {
         type: [GangMessage],
+        required: true
+    },
+    invites: {
+        type: [GangInvite],
         required: true
     },
     iconUploaded: {

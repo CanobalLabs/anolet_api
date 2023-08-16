@@ -91,10 +91,17 @@ module.exports = class GangValidator {
         }
     }
 
+    static memberRole() {
+        return {
+            body: Joi.object({
+                role: Joi.number().integer().min(0).required()
+            })
+        }
+    }
+
     static messageCreate() {
         return {
             body: Joi.object({
-                member: Joi.string().regex(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i).required(),
                 content: Joi.string().min(1).max(2048).required()
             })
         }
