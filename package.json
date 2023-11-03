@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "startwdoppler": "doppler run -- node server.js",
-    "dev": "doppler run -- nodemon server.js",
+    "dev": "doppler run -- nodemon --inspect server.js",
     "test": "doppler run -- jest --testTimeout=10000"
   },
   "jest": {

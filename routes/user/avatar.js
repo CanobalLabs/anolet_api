@@ -78,23 +78,21 @@ router.route("/").post(validate(avatarValidation, {}, {}), async (req, res) => {
                             console.log("rendered")
                             let calculatedAvatarBuffer = dataUriToBuffer(b64);
                             minio.putObject('anolet', `avatars/${req.params.userId == "me" ? res.locals.id : req.params.userId}/internal.png`, calculatedAvatarBuffer, function (err, etag) {
-                                let fileName = path.join(__dirname, '../tmp') + "/" + (req.params.userId == "me" ? res.locals.id : req.params.userId) + ".png";
-                                let trimName = path.join(__dirname, '../tmp') + "/trim-" + (req.params.userId == "me" ? res.locals.id : req.params.userId) + ".png"
-
+                                if (err) console.log("minio err", err)
+                                let fileName = path.join(__dirname, '../../tmp') + "/" + (req.params.userId == "me" ? res.locals.id : req.params.userId) + ".png";
+                                let trimName = path.join(__dirname, '../../tmp') + "/trim-" + (req.params.userId == "me" ? res.locals.id : req.params.userId) + ".png"
+                                res.send(calculatedAvatarBuffer);
 
                                 // Generate Preview
                                 fs.writeFile(fileName, calculatedAvatarBuffer, function (err) {
                                     trimImage(fileName, trimName, undefined, function (err) {
-                                        console.log(err);
 
                                         // We have to wait a bit for the file to be written. For some reason the callback is called before file writing is complete, so this is a ducktape solution for now.
                                         setTimeout(function () {
                                             fs.readFile(trimName, function (err, data) {
                                                 minio.putObject('anolet', `avatars/${req.params.userId == "me" ? res.locals.id : req.params.userId}/preview.png`, data, function (err, etag) {
-                                                    console.log(err);
                                                     fs.unlink(fileName, (err) => { if (err) throw err });
                                                     fs.unlink(trimName, (err) => { if (err) throw err });
-                                                    res.send(calculatedAvatarBuffer);
                                                 });
                                             });
                                         }, 3000);
